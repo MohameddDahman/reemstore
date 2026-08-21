@@ -7,7 +7,16 @@ import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
 import { Link, useRouter } from "@/i18n/navigation";
+import { ADMIN_EMAIL, ADMIN_DISPLAY_NAME } from "@/lib/admin-account";
 
+/**
+ * Password-only admin sign-in.
+ *
+ * The email is fixed (see `admin-account.ts`) so the operator types just a
+ * password. Everything security-relevant is unchanged: Convex Auth still
+ * hashes the password, issues a real session, and rate-limits attempts,
+ * and every admin query/mutation still runs `requireAdmin` server-side.
+ */
 export default function AdminLoginPage() {
   const t = useTranslations("admin.login");
   const { signIn } = useAuthActions();
@@ -16,28 +25,23 @@ export default function AdminLoginPage() {
   const bootstrapOwner = useMutation(api.adminAuth.bootstrapOwner);
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  // Set while a fresh sign-up is waiting for the Convex client to pick up
-  // its new auth token before we can call the (auth-gated) bootstrap
-  // mutation — see the effect below.
-  const [bootstrapPending, setBootstrapPending] = useState<{ name: string; email: string } | null>(
-    null
-  );
+  // Set while a fresh sign-up waits for the Convex client to pick up its
+  // new auth token before the (auth-gated) bootstrap mutation can run.
+  const [bootstrapPending, setBootstrapPending] = useState(false);
 
   const isSignUp = hasAdmin === false;
 
   useEffect(() => {
     if (!isAuthenticated || !bootstrapPending) return;
-    bootstrapOwner(bootstrapPending)
+    bootstrapOwner({ name: ADMIN_DISPLAY_NAME, email: ADMIN_EMAIL })
       .then(() => router.replace("/admin"))
       .catch(() => {
         toast.error("Could not finish creating the owner account");
         setSubmitting(false);
       })
-      .finally(() => setBootstrapPending(null));
+      .finally(() => setBootstrapPending(false));
   }, [isAuthenticated, bootstrapPending, bootstrapOwner, router]);
 
   useEffect(() => {
@@ -48,16 +52,14 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await signIn("password", { email, password, flow: isSignUp ? "signUp" : "signIn" });
-      if (isSignUp) {
-        // Don't call bootstrapOwner yet — isAuthenticated hasn't flipped
-        // to true on the client until the next render, and the mutation
-        // requires an authenticated caller. The effect above finishes
-        // the job once that happens.
-        setBootstrapPending({ name, email });
-      }
+      await signIn("password", {
+        email: ADMIN_EMAIL,
+        password,
+        flow: isSignUp ? "signUp" : "signIn",
+      });
+      if (isSignUp) setBootstrapPending(true);
     } catch {
-      toast.error(isSignUp ? "Could not create account" : "Invalid email or password");
+      toast.error(isSignUp ? "Could not create the account" : "Incorrect password");
       setSubmitting(false);
     }
   };
@@ -69,24 +71,6 @@ export default function AdminLoginPage() {
         <p className="mt-1 text-sm text-ink-soft">{t("subtitle")}</p>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
-          {isSignUp && (
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t("name")}
-              required
-              className="w-full rounded-lg border border-line bg-cream px-4 py-2.5 text-sm outline-none focus:border-rose-deep"
-            />
-          )}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("email")}
-            required
-            dir="ltr"
-            className="w-full rounded-lg border border-line bg-cream px-4 py-2.5 text-sm outline-none focus:border-rose-deep"
-          />
           <input
             type="password"
             value={password}
@@ -94,6 +78,8 @@ export default function AdminLoginPage() {
             placeholder={t("password")}
             required
             minLength={8}
+            autoFocus
+            autoComplete="current-password"
             dir="ltr"
             className="w-full rounded-lg border border-line bg-cream px-4 py-2.5 text-sm outline-none focus:border-rose-deep"
           />
@@ -102,11 +88,7 @@ export default function AdminLoginPage() {
             disabled={submitting || hasAdmin === undefined}
             className="w-full rounded-full bg-ink py-3 text-sm uppercase tracking-widest text-cream disabled:opacity-50"
           >
-            {submitting
-              ? t("signingIn")
-              : isSignUp
-                ? t("createAndSignIn")
-                : t("signIn")}
+            {submitting ? t("signingIn") : isSignUp ? t("createAndSignIn") : t("signIn")}
           </button>
         </form>
 
