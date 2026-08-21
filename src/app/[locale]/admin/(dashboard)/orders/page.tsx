@@ -47,7 +47,53 @@ export default function AdminOrdersPage() {
         </select>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+      {/* Mobile: cards. Status stays an inline select so orders can be
+          progressed without a desktop. */}
+      <div className="space-y-3 md:hidden">
+        {(orders ?? []).map((order) => (
+          <div key={order._id} className="rounded-xl border border-line bg-surface p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate font-medium text-ink" dir="ltr">
+                  {order.orderNumber}
+                </p>
+                <p className="truncate text-sm text-ink-soft">{order.customer.name}</p>
+                <p className="truncate text-xs text-ink-soft" dir="ltr">
+                  {order.customer.phone}
+                </p>
+              </div>
+              <div className="shrink-0 text-end">
+                <p className="whitespace-nowrap font-semibold text-ink">
+                  {formatPrice(order.total, symbol, locale)}
+                </p>
+                <p className="mt-0.5 whitespace-nowrap text-xs text-ink-soft">
+                  {new Date(order.createdAt).toLocaleDateString(
+                    locale === "ar" ? "ar-EG-u-nu-latn" : "en-US"
+                  )}
+                </p>
+              </div>
+            </div>
+            <select
+              value={order.status}
+              onChange={(e) => handleStatusChange(order._id, e.target.value)}
+              className="mt-3 w-full rounded-lg border border-line bg-cream px-3 py-2 text-sm"
+            >
+              {STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {ts(s)}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
+        {orders && orders.length === 0 && (
+          <p className="rounded-xl border border-line bg-surface px-4 py-8 text-center text-sm text-ink-soft">
+            —
+          </p>
+        )}
+      </div>
+
+      <div className="hidden overflow-x-auto rounded-xl border border-line bg-surface md:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-line text-start text-xs uppercase tracking-widest text-ink-soft">
