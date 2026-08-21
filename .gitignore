@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# convex
+.convex-tmp/
+.env.production.local
+
+.vercel
+.env*

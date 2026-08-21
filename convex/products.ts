@@ -1,0 +1,212 @@
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+import { requireAdmin } from "./lib/authz";
+
+const localized = v.object({ en: v.string(), ar: v.string() });
+const variant = v.object({
+  name: localized,
+  sku: v.string(),
+  priceOverride: v.optional(v.number()),
+  stock: v.number(),
+  swatch: v.optional(v.string()),
+  image: v.optional(v.string()),
+});
+
+function buildSearchText(name: { en: string; ar: string }, tags: string[]) {
+  return [name.en, name.ar, ...tags].join(" ");
+}
+
+// ---------- Public storefront queries ----------
+
+export const listActive = query({
+  args: {
+    categorySlug: v.optional(v.string()),
+    tag: v.optional(v.string()),
+    sort: v.optional(
+      v.union(v.literal("newest"), v.literal("price_asc"), v.literal("price_desc"))
+    ),
+  },
+  handler: async (ctx, { categorySlug, tag, sort }) => {
+    let products = await ctx.db
+      .query("products")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .collect();
+
+    if (categorySlug) {
+      const category = await ctx.db
+        .query("categories")
+        .withIndex("by_slug", (q) => q.eq("slug", categorySlug))
+        .unique();
+      products = category ? products.filter((p) => p.categoryId === category._id) : [];
+    }
+
+    if (tag) {
+      products = products.filter((p) => p.tags.includes(tag));
+    }
+
+    switch (sort) {
+      case "price_asc":
+        products.sort((a, b) => a.price - b.price);
+        break;
+      case "price_desc":
+        products.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        products.sort((a, b) => b.createdAt - a.createdAt);
+    }
+
+    return products;
+  },
+});
+
+export const featured = query({
+  args: {},
+  handler: async (ctx) => {
+    const products = await ctx.db
+      .query("products")
+      .withIndex("by_featured", (q) => q.eq("featured", true))
+      .collect();
+    return products.filter((p) => p.status === "active").sort((a, b) => b.createdAt - a.createdAt);
+  },
+});
+
+/** Active products with a compare-at price above their current price —
+ * i.e. genuinely discounted right now. Powers the storefront's offers
+ * rail, sorted by deepest discount first. */
+export const onSale = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, { limit }) => {
+    const products = await ctx.db
+      .query("products")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .collect();
+
+    return products
+      .filter((p) => p.compareAtPrice != null && p.compareAtPrice > p.price)
+      .sort(
+        (a, b) =>
+          (b.compareAtPrice! - b.price) / b.compareAtPrice! -
+          (a.compareAtPrice! - a.price) / a.compareAtPrice!
+      )
+      .slice(0, limit ?? 8);
+  },
+});
+
+/** Newest active products, for the "New Arrivals" rail. */
+export const newArrivals = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, { limit }) => {
+    const products = await ctx.db
+      .query("products")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .collect();
+
+    return products
+      .filter((p) => p.isNew)
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, limit ?? 8);
+  },
+});
+
+export const getBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, { slug }) => {
+    const product = await ctx.db
+      .query("products")
+      .withIndex("by_slug", (q) => q.eq("slug", slug))
+      .unique();
+    if (!product || product.status !== "active") return null;
+    const category = await ctx.db.get(product.categoryId);
+    return { ...product, category };
+  },
+});
+
+export const search = query({
+  args: { term: v.string() },
+  handler: async (ctx, { term }) => {
+    if (!term.trim()) return [];
+    return await ctx.db
+      .query("products")
+      .withSearchIndex("search_name", (q) =>
+        q.search("searchText", term).eq("status", "active")
+      )
+      .take(20);
+  },
+});
+
+// ---------- Admin queries/mutations ----------
+
+export const listAll = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    const products = await ctx.db.query("products").collect();
+    return products.sort((a, b) => b.createdAt - a.createdAt);
+  },
+});
+
+export const getById = query({
+  args: { id: v.id("products") },
+  handler: async (ctx, { id }) => {
+    await requireAdmin(ctx);
+    return await ctx.db.get(id);
+  },
+});
+
+const productFields = {
+  name: localized,
+  slug: v.string(),
+  description: localized,
+  shortDescription: v.optional(localized),
+  categoryId: v.id("categories"),
+  images: v.array(v.string()),
+  price: v.number(),
+  compareAtPrice: v.optional(v.number()),
+  sku: v.string(),
+  variants: v.array(variant),
+  stock: v.number(),
+  tags: v.array(v.string()),
+  ingredients: v.optional(localized),
+  howToUse: v.optional(localized),
+  featured: v.boolean(),
+  isNew: v.boolean(),
+  status: v.union(v.literal("active"), v.literal("draft"), v.literal("archived")),
+};
+
+export const create = mutation({
+  args: productFields,
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const existing = await ctx.db
+      .query("products")
+      .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+      .unique();
+    if (existing) throw new Error("A product with this slug already exists");
+    return await ctx.db.insert("products", {
+      ...args,
+      searchText: buildSearchText(args.name, args.tags),
+      avgRating: 0,
+      reviewCount: 0,
+      createdAt: Date.now(),
+    });
+  },
+});
+
+export const update = mutation({
+  args: { id: v.id("products"), ...productFields },
+  handler: async (ctx, { id, ...rest }) => {
+    await requireAdmin(ctx);
+    await ctx.db.patch(id, {
+      ...rest,
+      searchText: buildSearchText(rest.name, rest.tags),
+    });
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.id("products") },
+  handler: async (ctx, { id }) => {
+    await requireAdmin(ctx);
+    await ctx.db.delete(id);
+  },
+});

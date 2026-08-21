@@ -1,0 +1,221 @@
+{
+  "brand": {
+    "name": "Reem",
+    "tagline": "Beauty, unveiled."
+  },
+  "nav": {
+    "shop": "Shop",
+    "skincare": "Skincare",
+    "makeup": "Makeup",
+    "fragrance": "Fragrance",
+    "hairCare": "Hair Care",
+    "trackOrder": "Track Order",
+    "search": "Search products...",
+    "cart": "Cart",
+    "menu": "Menu"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "New Season Edit",
+      "title": "Radiance,\nRedefined.",
+      "subtitle": "Clean, high-performance beauty crafted for every shade, every skin, every story.",
+      "cta": "Discover the Collection",
+      "secondaryCta": "Explore Bestsellers"
+    },
+    "usp": {
+      "shipping": {
+        "title": "Fast Delivery",
+        "desc": "Across the Kingdom in 2-4 days"
+      },
+      "cod": {
+        "title": "Cash on Delivery",
+        "desc": "Pay when your order arrives"
+      },
+      "authentic": {
+        "title": "100% Authentic",
+        "desc": "Sourced directly from the brands"
+      },
+      "returns": {
+        "title": "Easy Returns",
+        "desc": "7-day hassle-free returns"
+      }
+    },
+    "categories": {
+      "title": "Shop by Category",
+      "subtitle": "Curated edits for every ritual"
+    },
+    "featured": {
+      "title": "Bestsellers",
+      "subtitle": "Loved by thousands, restocked weekly"
+    },
+    "newArrivals": {
+      "title": "Just Landed",
+      "subtitle": "The newest additions to the edit"
+    },
+    "testimonials": {
+      "title": "Loved, Reviewed, Reordered",
+      "subtitle": "Real words from real Reem customers"
+    },
+    "editorial": {
+      "title": "The Ritual of Radiant Skin",
+      "body": "Every Reem formula is developed with dermatologists and perfumers who obsess over texture, scent, and how a product feels on skin — not just how it looks on a shelf.",
+      "cta": "Our Story"
+    },
+    "newsletter": {
+      "title": "Join the Inner Circle",
+      "subtitle": "Early access to drops, private sales, and beauty edits.",
+      "placeholder": "Enter your email",
+      "cta": "Subscribe"
+    }
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "lowStock": "Only {count} left",
+    "shade": "Shade",
+    "quantity": "Quantity",
+    "description": "Description",
+    "ingredients": "Ingredients",
+    "howToUse": "How to Use",
+    "reviews": "Reviews",
+    "writeReview": "Write a Review",
+    "noReviews": "Be the first to review this product.",
+    "relatedProducts": "You may also like",
+    "new": "New",
+    "sale": "Sale",
+    "submitReview": "Submit Review",
+    "yourName": "Your name",
+    "yourReview": "Your review",
+    "reviewSubmitted": "Thank you! Your review will appear after a quick check.",
+    "chooseOptions": "Choose Options"
+  },
+  "cart": {
+    "title": "Your Bag",
+    "empty": "Your bag is empty",
+    "emptySubtitle": "Add products you love to see them here.",
+    "continueShopping": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "free": "Free",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "couponPlaceholder": "Discount code",
+    "applyCoupon": "Apply",
+    "couponApplied": "Applied",
+    "freeShippingProgress": "Add {amount} more for free shipping"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "contactInfo": "Contact Information",
+    "name": "Full name",
+    "phone": "Phone number",
+    "email": "Email (optional)",
+    "shippingInfo": "Shipping Address",
+    "city": "City",
+    "area": "Area / District",
+    "address": "Street address",
+    "notes": "Delivery notes (optional)",
+    "paymentMethod": "Payment Method",
+    "cod": "Cash on Delivery",
+    "codDesc": "Pay in cash when your order arrives at your door.",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "placingOrder": "Placing your order...",
+    "successTitle": "Order Confirmed!",
+    "successSubtitle": "Thank you — your order {orderNumber} has been placed.",
+    "successBody": "We'll call you at {phone} to confirm delivery details. Pay in cash when it arrives.",
+    "backHome": "Back to Home",
+    "required": "This field is required"
+  },
+  "track": {
+    "title": "Track Your Order",
+    "subtitle": "Enter your order number and phone number to see its status.",
+    "orderNumber": "Order Number",
+    "phone": "Phone Number",
+    "submit": "Track Order",
+    "notFound": "We couldn't find an order with those details.",
+    "status": "Status"
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "popup": {
+    "close": "Close",
+    "shopNow": "Shop Now"
+  },
+  "footer": {
+    "about": "Reem is a modern beauty house crafting clean, high-performance skincare, makeup and fragrance for the region.",
+    "shop": "Shop",
+    "help": "Help",
+    "trackOrder": "Track Order",
+    "contact": "Contact Us",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved."
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Sign In",
+      "subtitle": "Manage your Reem storefront",
+      "email": "Email",
+      "password": "Password",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "createAccount": "Create the owner account",
+      "name": "Your name",
+      "createAndSignIn": "Create Account & Sign In",
+      "backToStore": "Back to store"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "categories": "Categories",
+      "orders": "Orders",
+      "coupons": "Coupons",
+      "banners": "Promo Popups",
+      "reviews": "Reviews",
+      "settings": "Settings",
+      "signOut": "Sign Out",
+      "viewStore": "View Store"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "revenue": "Total Revenue",
+      "orders": "Total Orders",
+      "pending": "Pending Orders",
+      "recentOrders": "Recent Orders"
+    },
+    "products": {
+      "title": "Products",
+      "add": "Add Product",
+      "edit": "Edit Product",
+      "name": "Name",
+      "price": "Price",
+      "stock": "Stock",
+      "status": "Status",
+      "category": "Category",
+      "save": "Save Product",
+      "delete": "Delete"
+    },
+    "orders": {
+      "title": "Orders",
+      "orderNumber": "Order #",
+      "customer": "Customer",
+      "total": "Total",
+      "status": "Status",
+      "date": "Date",
+      "updateStatus": "Update Status"
+    }
+  },
+  "common": {
+    "viewAll": "View All",
+    "shopNow": "Shop Now"
+  }
+}
