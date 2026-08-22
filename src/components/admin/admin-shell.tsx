@@ -7,6 +7,7 @@ import { useQuery } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard,
+  TrendingUp,
   Package,
   FolderTree,
   ShoppingBag,
@@ -26,6 +27,7 @@ import { useEscapeKey } from "@/lib/use-escape-key";
 
 const NAV = [
   { key: "dashboard", href: "/admin", icon: LayoutDashboard },
+  { key: "marketing", href: "/admin/marketing", icon: TrendingUp },
   { key: "products", href: "/admin/products", icon: Package },
   { key: "categories", href: "/admin/categories", icon: FolderTree },
   { key: "orders", href: "/admin/orders", icon: ShoppingBag },

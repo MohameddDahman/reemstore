@@ -27,7 +27,7 @@ const SLIDES: Slide[] = [
     en: {
       kicker: "Mother & Baby",
       title: "Diapers, wipes and\nformula — delivered",
-      sub: "Bulk packs at pharmacy prices. Cash on delivery, anywhere in Egypt.",
+      sub: "Bulk packs at better prices. Cash on delivery, anywhere in Egypt.",
       cta: "Shop Mother & Baby",
     },
     ar: {
@@ -56,18 +56,18 @@ const SLIDES: Slide[] = [
   },
   {
     href: "/category/adult-care",
-    image: art("1603398938378-e54eab446dde"),
+    image: art("1584622650111-993a426fbf0a"),
     tint: "#eef1f6",
     en: {
       kicker: "Adult & Home Care",
-      title: "Everything a pharmacy\nsells. Except medicine.",
-      sub: "Adult care, medical supplies and home essentials in one order.",
+      title: "Care for everyone\nunder one roof",
+      sub: "Adult care, daily essentials and home supplies in one order.",
       cta: "Browse departments",
     },
     ar: {
       kicker: "عناية الكبار والمنزل",
-      title: "كل ما تبيعه الصيدلية.\nما عدا الدواء.",
-      sub: "عناية الكبار والمستلزمات الطبية ومستلزمات المنزل في طلب واحد.",
+      title: "عناية لكل فرد\nفي البيت",
+      sub: "عناية الكبار والاحتياجات اليومية ومستلزمات المنزل في طلب واحد.",
       cta: "تصفحي الأقسام",
     },
   },

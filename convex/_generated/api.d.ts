@@ -9,6 +9,7 @@
  */
 
 import type * as adminAuth from "../adminAuth.js";
+import type * as analytics from "../analytics.js";
 import type * as auth from "../auth.js";
 import type * as banners from "../banners.js";
 import type * as brands from "../brands.js";
@@ -22,6 +23,7 @@ import type * as lib_stockImages from "../lib/stockImages.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as reviews from "../reviews.js";
+import type * as seedDemoOrders from "../seedDemoOrders.js";
 import type * as seedStore from "../seedStore.js";
 import type * as settings from "../settings.js";
 
@@ -33,6 +35,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   adminAuth: typeof adminAuth;
+  analytics: typeof analytics;
   auth: typeof auth;
   banners: typeof banners;
   brands: typeof brands;
@@ -46,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   orders: typeof orders;
   products: typeof products;
   reviews: typeof reviews;
+  seedDemoOrders: typeof seedDemoOrders;
   seedStore: typeof seedStore;
   settings: typeof settings;
 }>;

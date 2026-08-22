@@ -1,6 +1,6 @@
 /**
- * Reem's launch catalogue: a pharmacy-style marketplace for everyday
- * health and care — everything a pharmacy sells except the medicine.
+ * Reem's launch catalogue: an everyday care marketplace — skincare,
+ * hair, baby, adult care, personal care, vitamins and home essentials.
  *
  * Shape is department -> subcategory -> products, which is what the mega
  * menu, department pages and homepage rails all read. Prices are EGP,

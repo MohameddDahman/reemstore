@@ -29,8 +29,8 @@ export function DepartmentGrid() {
             </h2>
             <p className="mt-0.5 text-sm text-ink-soft">
               {locale === "ar"
-                ? "كل ما تبيعه الصيدلية — ما عدا الدواء"
-                : "Everything a pharmacy sells — except the medicine"}
+                ? "كل ما يحتاجه البيت في مكان واحد"
+                : "Everything the household needs, in one place"}
             </p>
           </div>
         </div>
