@@ -275,7 +275,10 @@
       "cancel": "إلغاء",
       "noneToDelete": "لا يوجد ما يُحذف",
       "deletedCount": "تم حذف {count} طلب",
-      "failed": "تعذّر الحذف"
+      "failed": "تعذّر الحذف",
+      "countLabel": "{count} طلب",
+      "deleteDemoShort": "التجريبية",
+      "deleteAllShort": "حذف الكل"
     },
     "marketing": {
       "title": "التسويق",

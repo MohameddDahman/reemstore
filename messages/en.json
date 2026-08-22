@@ -275,7 +275,10 @@
       "cancel": "Cancel",
       "noneToDelete": "There was nothing to delete",
       "deletedCount": "Deleted {count} orders",
-      "failed": "Could not delete"
+      "failed": "Could not delete",
+      "countLabel": "{count} orders",
+      "deleteDemoShort": "Samples",
+      "deleteAllShort": "Delete all"
     },
     "marketing": {
       "title": "Marketing",

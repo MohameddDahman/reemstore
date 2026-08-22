@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Sparkles, Trash2 } from "lucide-react";
 import { api } from "../../../../../../convex/_generated/api";
 import { formatPrice } from "@/lib/utils";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
@@ -98,20 +98,56 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-w-0">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-heading text-2xl font-bold text-ink">{t("title")}</h1>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="min-w-0 max-w-[10rem] rounded-lg border border-line bg-surface px-3 py-2 text-sm sm:max-w-none"
-        >
-          <option value="">All</option>
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {ts(s)}
-            </option>
-          ))}
-        </select>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="font-heading text-2xl font-bold text-ink">{t("title")}</h1>
+          {orders && (
+            <p className="text-sm text-ink-soft">{t("countLabel", { count: orders.length })}</p>
+          )}
+        </div>
+
+        {/* Filter and the bulk actions sit together at the top. Putting
+            "delete all" under the table meant scrolling past every order
+            to reach it — on a busy shop, thousands of pixels down. */}
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="min-w-0 max-w-[9rem] rounded-lg border border-line bg-surface px-3 py-2 text-sm sm:max-w-none"
+          >
+            <option value="">All</option>
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {ts(s)}
+              </option>
+            ))}
+          </select>
+
+          {demoCount > 0 && (
+            <button
+              onClick={() => setPending({ kind: "demo" })}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold text-ink-soft transition-colors hover:border-rose-deep hover:text-rose-deep"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span className="hidden sm:inline">{t("deleteDemo")}</span>
+              <span className="sm:hidden">{t("deleteDemoShort")}</span>
+              <span className="tabular-nums">({demoCount})</span>
+            </button>
+          )}
+
+          {orders && orders.length > 0 && (
+            <button
+              onClick={() => setPending({ kind: "all" })}
+              // Outlined rather than filled: it must be findable, not
+              // the most eye-catching thing on the page.
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-rose-deep/40 bg-surface px-3 py-2 text-sm font-semibold text-rose-deep transition-colors hover:bg-rose-deep hover:text-white"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline">{t("deleteAll")}</span>
+              <span className="sm:hidden">{t("deleteAllShort")}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Mobile: cards. Status stays an inline select so orders can be
@@ -233,30 +269,6 @@ export default function AdminOrdersPage() {
           <p className="px-4 py-8 text-center text-sm text-ink-soft">—</p>
         )}
       </div>
-
-      {orders && orders.length > 0 && (
-        <section className="mt-8 rounded-xl border border-dashed border-rose/40 bg-rose-mist/30 p-4 sm:p-5">
-          <h2 className="font-heading text-sm font-bold text-rose-deep">{t("dangerZone")}</h2>
-          <p className="text-xs text-ink-soft">{t("dangerZoneSub")}</p>
-
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            {demoCount > 0 && (
-              <button
-                onClick={() => setPending({ kind: "demo" })}
-                className="rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-rose-deep hover:text-rose-deep"
-              >
-                {t("deleteDemo")} ({demoCount})
-              </button>
-            )}
-            <button
-              onClick={() => setPending({ kind: "all" })}
-              className="rounded-full bg-rose-deep px-4 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
-            >
-              {t("deleteAll")}
-            </button>
-          </div>
-        </section>
-      )}
 
       <ConfirmDialog
         open={pending !== null}
