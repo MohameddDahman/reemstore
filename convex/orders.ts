@@ -248,3 +248,69 @@ export const stats = query({
     };
   },
 });
+
+// ---------- Admin: deletion ----------
+//
+// Deleting an order does NOT put its items back into stock. Stock came
+// off the shelf when the order was placed, and whether it should return
+// depends on why the order is going away — a delivered order's stock is
+// genuinely gone, a mistaken one's is not. Guessing would silently
+// corrupt inventory, so the number stays where it is and the admin
+// adjusts the product if it needs adjusting.
+//
+// Deletion is permanent: there is no archive table to restore from.
+
+/** How many rows one call may remove, to stay inside a transaction. */
+const DELETE_BATCH = 400;
+
+export const remove = mutation({
+  args: { id: v.id("orders") },
+  handler: async (ctx, { id }) => {
+    await requireAdmin(ctx);
+    const order = await ctx.db.get(id);
+    if (!order) throw new Error("That order no longer exists.");
+    await ctx.db.delete(id);
+    return { orderNumber: order.orderNumber };
+  },
+});
+
+/**
+ * Remove the sample orders written by seedDemoOrders, leaving real ones
+ * alone. Matching on the RS-DEMO- prefix is what makes that separation
+ * possible, which is why the seeder stamps it.
+ */
+export const removeDemo = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    const all = await ctx.db.query("orders").collect();
+    const demo = all.filter((o) => o.orderNumber.startsWith("RS-DEMO-"));
+    const batch = demo.slice(0, DELETE_BATCH);
+    for (const order of batch) await ctx.db.delete(order._id);
+    return { deleted: batch.length, remaining: demo.length - batch.length };
+  },
+});
+
+/**
+ * Empty the orders table.
+ *
+ * Guarded by a literal phrase rather than a boolean: a stray `true` from
+ * a mis-wired form should not be able to erase the shop's entire sales
+ * history, and the caller has to have meant this specific thing.
+ *
+ * Returns `remaining` so the caller can keep going on a table too large
+ * for one transaction.
+ */
+export const removeAll = mutation({
+  args: { confirm: v.string() },
+  handler: async (ctx, { confirm }) => {
+    await requireAdmin(ctx);
+    if (confirm !== "DELETE ALL ORDERS") {
+      throw new Error("Confirmation phrase did not match. Nothing was deleted.");
+    }
+    const batch = await ctx.db.query("orders").take(DELETE_BATCH + 1);
+    const toDelete = batch.slice(0, DELETE_BATCH);
+    for (const order of toDelete) await ctx.db.delete(order._id);
+    return { deleted: toDelete.length, remaining: batch.length > DELETE_BATCH };
+  },
+});
