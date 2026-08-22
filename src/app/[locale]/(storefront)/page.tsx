@@ -5,6 +5,7 @@ import { FlashDeals } from "@/components/storefront/flash-deals";
 import { DepartmentGrid } from "@/components/storefront/department-grid";
 import { PromoTiles } from "@/components/storefront/promo-tiles";
 import { BrandRail } from "@/components/storefront/brand-rail";
+import { AdCarousel } from "@/components/storefront/ad-carousel";
 import {
   BestsellersRail,
   DepartmentRail,
@@ -45,6 +46,13 @@ export default async function HomePage({
         subAr="حفاضات ومناديل وببرونات واستحمام"
       />
 
+      <AdCarousel
+        set="everyday"
+        titleEn="Offers this week"
+        titleAr="عروض هذا الأسبوع"
+        band
+      />
+
       <PromoTiles />
 
       <DepartmentRail
@@ -73,6 +81,13 @@ export default async function HomePage({
         subEn="Bath, deodorant, body and hands"
         subAr="استحمام ومزيلات عرق وعناية بالجسم واليدين"
         accent
+      />
+
+      <AdCarousel
+        set="grooming"
+        titleEn="Grooming & devices"
+        titleAr="الحلاقة والأجهزة"
+        band
       />
 
       <DepartmentRail

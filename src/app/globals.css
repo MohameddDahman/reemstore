@@ -40,6 +40,11 @@
   --color-sand: #fdf6ec;
   --color-sand-deep: #f7e8d3;
   --color-danger: #b5560c;
+  /* Bright yellow reserved for the rotated price-flash sticker on
+     campaign banners — the vernacular of Egyptian retail advertising.
+     Distinct from --color-gold, which is a muted metallic used for
+     small marks and would disappear against a photo. */
+  --color-gold-flash: #f5c518;
 
   --background: var(--color-cream);
   --foreground: var(--color-ink);
@@ -95,6 +100,7 @@
   --color-sand: var(--color-sand);
   --color-sand-deep: var(--color-sand-deep);
   --color-danger: var(--color-danger);
+  --color-gold-flash: var(--color-gold-flash);
 
   --font-heading: var(--font-heading), sans-serif;
   --font-body: var(--font-body), sans-serif;
