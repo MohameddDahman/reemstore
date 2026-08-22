@@ -2,12 +2,22 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireAdmin } from "./lib/authz";
 
+/**
+ * Order numbers double as the tracking credential, so the random part has
+ * to be hard to guess. Four digits meant ~9,000 possibilities per day —
+ * enumerable in seconds. Six characters from an unambiguous alphabet
+ * (no I/O/0/1) give ~2 billion, while staying easy to read down a phone.
+ */
+const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
 function generateOrderNumber() {
   const now = new Date();
   const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
     now.getDate()
   ).padStart(2, "0")}`;
-  const randomPart = Math.floor(1000 + Math.random() * 9000);
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  const randomPart = Array.from(bytes, (b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join("");
   return `RS-${datePart}-${randomPart}`;
 }
 
@@ -56,7 +66,14 @@ export const placeOrder = mutation({
     for (const item of items) {
       const product = await ctx.db.get(item.productId);
       if (!product || product.status !== "active") {
-        throw new Error("One of the items in your cart is no longer available");
+        // The storefront checks availability before enabling checkout, so
+        // reaching here means the catalogue changed mid-checkout. Name the
+        // item — "something in your cart" leaves the shopper guessing which.
+        throw new Error(
+          product
+            ? `"${product.name.en}" is no longer available. Please remove it from your bag.`
+            : "An item in your bag is no longer sold. Please remove it and try again."
+        );
       }
 
       let price = product.price;
@@ -72,7 +89,9 @@ export const placeOrder = mutation({
       }
 
       if (availableStock < item.quantity) {
-        throw new Error(`Not enough stock for ${product.name.en}`);
+        throw new Error(
+          `Only ${availableStock} left of "${product.name.en}". Please reduce the quantity.`
+        );
       }
 
       subtotal += price * item.quantity;
@@ -143,15 +162,44 @@ export const placeOrder = mutation({
   },
 });
 
+/**
+ * Look up an order by its number alone.
+ *
+ * The number is the only credential here, so this deliberately returns a
+ * redacted view: enough for the customer to recognise their order and see
+ * where it is, but not enough to hand a stranger someone's identity if
+ * they ever guess a number. The full record stays admin-only.
+ */
 export const trackOrder = query({
-  args: { orderNumber: v.string(), phone: v.string() },
-  handler: async (ctx, { orderNumber, phone }) => {
+  args: { orderNumber: v.string() },
+  handler: async (ctx, { orderNumber }) => {
     const order = await ctx.db
       .query("orders")
-      .withIndex("by_orderNumber", (q) => q.eq("orderNumber", orderNumber.toUpperCase()))
+      .withIndex("by_orderNumber", (q) => q.eq("orderNumber", orderNumber.trim().toUpperCase()))
       .unique();
-    if (!order || order.customer.phone !== phone) return null;
-    return order;
+    if (!order) return null;
+
+    const phone = order.customer.phone;
+    const maskedPhone =
+      phone.length > 4 ? `${"•".repeat(Math.max(phone.length - 4, 3))}${phone.slice(-4)}` : "••••";
+    const [firstName] = order.customer.name.trim().split(/\s+/);
+
+    return {
+      orderNumber: order.orderNumber,
+      status: order.status,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      items: order.items,
+      subtotal: order.subtotal,
+      discount: order.discount,
+      shippingFee: order.shippingFee,
+      total: order.total,
+      paymentMethod: order.paymentMethod,
+      // Redacted: first name, last four of the phone, city only — never
+      // the full name, number or street address.
+      customer: { firstName, maskedPhone },
+      shipping: { city: order.shipping.city },
+    };
   },
 });
 

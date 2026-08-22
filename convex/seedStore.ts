@@ -158,9 +158,20 @@ export const seedStore = internalMutation({
       .query("banners")
       .withIndex("by_type_active", (q) => q.eq("type", "popup").eq("active", true))
       .first();
-    if (!popup) {
+    const popupFields = {
+      couponCode: "REEM15",
+      ctaLink: "/category/skin-care",
+    };
+    if (popup) {
+      // Repair popups seeded before the scratch card needed a code, and
+      // before the taxonomy renamed "skincare" to "skin-care".
+      if (popup.couponCode !== popupFields.couponCode || popup.ctaLink !== popupFields.ctaLink) {
+        await ctx.db.patch(popup._id, popupFields);
+      }
+    } else {
       await ctx.db.insert("banners", {
         type: "popup",
+        couponCode: "REEM15",
         title: { en: "15% off your first order", ar: "خصم ١٥٪ على أول طلب" },
         subtitle: {
           en: "Use code REEM15 at checkout. Cash on delivery, everywhere in Egypt.",

@@ -36,6 +36,7 @@ export const listAll = query({
 const bannerFields = {
   type: bannerType,
   title: localized,
+  couponCode: v.optional(v.string()),
   subtitle: v.optional(localized),
   image: v.optional(v.string()),
   ctaText: v.optional(localized),

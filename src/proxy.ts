@@ -1,3 +1,6 @@
+// Next 16 renamed the `middleware` file convention to `proxy`; the
+// behaviour is identical. Convex Auth's wrapper is still the default
+// export, so only the filename changes.
 import {
   convexAuthNextjsMiddleware,
   nextjsMiddlewareRedirect,
@@ -32,7 +35,7 @@ export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
 
 export const config = {
   // Convex Auth proxies sign-in/sign-out requests through /api/auth, so
-  // that path must still pass through this middleware (it's handled
-  // internally by convexAuthNextjsMiddleware before our handler runs).
+  // that path must still pass through here (it's handled internally by
+  // convexAuthNextjsMiddleware before our handler runs).
   matcher: ["/((?!trpc|_next|_vercel|.*\\..*).*)"],
 };

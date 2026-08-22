@@ -88,7 +88,8 @@
     "yourName": "Your name",
     "yourReview": "Your review",
     "reviewSubmitted": "Thank you! Your review will appear after a quick check.",
-    "chooseOptions": "Choose Options"
+    "chooseOptions": "Choose Options",
+    "added": "Added"
   },
   "cart": {
     "title": "Your Bag",
@@ -124,20 +125,30 @@
     "orderSummary": "Order Summary",
     "placeOrder": "Place Order",
     "placingOrder": "Placing your order...",
-    "successTitle": "Order Confirmed!",
-    "successSubtitle": "Thank you — your order {orderNumber} has been placed.",
-    "successBody": "We'll call you at {phone} to confirm delivery details. Pay in cash when it arrives.",
+    "successTitle": "Order confirmed",
+    "successSubtitle": "Thanks — we've got your order.",
+    "successBody": "We'll call you on {phone} to confirm delivery. Pay in cash when it arrives.",
     "backHome": "Back to Home",
-    "required": "This field is required"
+    "required": "This field is required",
+    "yourOrderNumber": "Your order number",
+    "saveNumberNote": "Save this — it's how you track your order.",
+    "copyNumber": "Copy number",
+    "numberCopied": "Copied",
+    "trackThisOrder": "Track this order"
   },
   "track": {
-    "title": "Track Your Order",
-    "subtitle": "Enter your order number and phone number to see its status.",
-    "orderNumber": "Order Number",
-    "phone": "Phone Number",
-    "submit": "Track Order",
-    "notFound": "We couldn't find an order with those details.",
-    "status": "Status"
+    "title": "Track your order",
+    "subtitle": "Enter your order number to see where it is.",
+    "orderNumber": "Order number",
+    "hint": "It's on your confirmation — it starts with RS-",
+    "submit": "Track order",
+    "notFound": "No order matches that number. Check it and try again.",
+    "status": "Status",
+    "placedOn": "Placed",
+    "orderedBy": "Ordered by",
+    "deliveringTo": "Delivering to",
+    "total": "Total",
+    "privacyNote": "Contact details are hidden for your protection."
   },
   "orderStatus": {
     "pending": "Pending",
@@ -238,5 +249,12 @@
     "orderTitle": "Checking on an order?",
     "orderBody": "Track it with your order number and the phone number you used.",
     "orderCta": "Track my order"
+  },
+  "notFound": {
+    "title": "We can't find that page",
+    "body": "The link may be old, or the product may no longer be sold. Try a search, or pick a department below.",
+    "searchCta": "Search products",
+    "homeCta": "Back to home",
+    "popular": "Popular departments"
   }
 }

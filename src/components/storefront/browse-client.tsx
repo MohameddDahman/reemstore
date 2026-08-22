@@ -156,14 +156,14 @@ export function BrowseClient({
         <aside className="hidden w-56 shrink-0 lg:block">{filterPanel}</aside>
 
         <div className="min-w-0 flex-1">
-          <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
             <p className="text-sm text-ink-soft">
               {products
                 ? `${products.length} ${locale === "ar" ? "منتج" : "products"}`
                 : "…"}
             </p>
 
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <button
                 onClick={() => setFiltersOpen((v) => !v)}
                 className="flex items-center gap-1.5 rounded-full border border-line px-3 py-2 text-sm text-ink lg:hidden"
@@ -174,7 +174,7 @@ export function BrowseClient({
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as Sort)}
-                className="rounded-full border border-line bg-white px-3 py-2 text-sm text-ink outline-none"
+                className="min-w-0 max-w-[9.5rem] truncate rounded-full border border-line bg-white px-3 py-2 text-sm text-ink outline-none sm:max-w-none"
               >
                 {term && (
                   <option value="relevance">

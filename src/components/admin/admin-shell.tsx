@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
@@ -22,6 +22,7 @@ import {
 import { api } from "../../../convex/_generated/api";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useScrollLock } from "@/lib/use-scroll-lock";
+import { useEscapeKey } from "@/lib/use-escape-key";
 
 const NAV = [
   { key: "dashboard", href: "/admin", icon: LayoutDashboard },
@@ -41,7 +42,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const { signOut } = useAuthActions();
   const admin = useQuery(api.adminAuth.currentAdmin);
   const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
   useScrollLock(menuOpen);
+  useEscapeKey(menuOpen, closeMenu);
 
   // Close the mobile drawer on navigation. Adjusted during render (React's
   // recommended pattern for resetting state on a changing value) instead of

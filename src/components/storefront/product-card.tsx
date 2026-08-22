@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "@/i18n/navigation";
 import { useCart } from "@/store/cart";
@@ -17,6 +17,9 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
   const t = useTranslations("product");
   const add = useCart((s) => s.add);
   const [hover, setHover] = useState(false);
+  // Brief confirmation on the button itself. A toast alone makes people
+  // wonder whether the tap registered, and they tap again.
+  const [justAdded, setJustAdded] = useState(false);
   const symbol = useCurrencySymbol();
 
   const hasVariants = product.variants.length > 0;
@@ -48,6 +51,8 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
       1
     );
     toast.success(product.name[locale]);
+    setJustAdded(true);
+    window.setTimeout(() => setJustAdded(false), 1400);
   };
 
   return (
@@ -147,9 +152,24 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
           <button
             onClick={quickAdd}
             disabled={outOfStock}
-            className="mt-2.5 w-full rounded-full border border-ink bg-transparent py-2 text-[11px] font-medium uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:border-line disabled:text-ink-soft disabled:hover:bg-transparent disabled:hover:text-ink-soft"
+            className={`mt-2.5 w-full rounded-full border py-2 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors disabled:cursor-not-allowed disabled:border-line disabled:text-ink-soft disabled:hover:bg-transparent disabled:hover:text-ink-soft ${
+              justAdded
+                ? "border-mint bg-mint text-white"
+                : "border-ink bg-transparent text-ink hover:bg-ink hover:text-white"
+            }`}
           >
-            {outOfStock ? t("outOfStock") : hasVariants ? t("chooseOptions") : t("addToCart")}
+            {justAdded ? (
+              <span className="flex items-center justify-center gap-1.5">
+                <Check className="h-3.5 w-3.5" />
+                {t("added")}
+              </span>
+            ) : outOfStock ? (
+              t("outOfStock")
+            ) : hasVariants ? (
+              t("chooseOptions")
+            ) : (
+              t("addToCart")
+            )}
           </button>
         </div>
       </Link>

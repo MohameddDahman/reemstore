@@ -157,6 +157,8 @@ export default defineSchema({
   banners: defineTable({
     type: v.union(v.literal("popup"), v.literal("topbar"), v.literal("hero")),
     title: localized,
+    /** Discount code the entry popup reveals, e.g. "REEM15". */
+    couponCode: v.optional(v.string()),
     subtitle: v.optional(localized),
     image: v.optional(v.string()),
     ctaText: v.optional(localized),

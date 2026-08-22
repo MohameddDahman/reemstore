@@ -320,3 +320,59 @@ export const browse = query({
     return products;
   },
 });
+
+/**
+ * Per-line availability for a cart.
+ *
+ * The cart lives in the shopper's browser and can outlive the catalogue:
+ * a product gets archived, sells out, or is removed entirely, and the
+ * stored line still points at it. Without this the first sign of trouble
+ * is placeOrder throwing at checkout, which strands the shopper with no
+ * way to fix their own cart.
+ *
+ * Returns a verdict per line so the UI can mark exactly which item is a
+ * problem and offer to remove it.
+ */
+export const availability = query({
+  args: {
+    items: v.array(
+      v.object({
+        productId: v.id("products"),
+        variantSku: v.optional(v.string()),
+        quantity: v.number(),
+      })
+    ),
+  },
+  handler: async (ctx, { items }) => {
+    return await Promise.all(
+      items.map(async (item) => {
+        const base = { productId: item.productId, variantSku: item.variantSku };
+        const product = await ctx.db.get(item.productId);
+
+        if (!product || product.status !== "active") {
+          return { ...base, ok: false, reason: "unavailable" as const, availableStock: 0, price: null };
+        }
+
+        let stock = product.stock;
+        let price = product.price;
+
+        if (item.variantSku) {
+          const variant = product.variants.find((v) => v.sku === item.variantSku);
+          if (!variant) {
+            return { ...base, ok: false, reason: "unavailable" as const, availableStock: 0, price: null };
+          }
+          stock = variant.stock;
+          price = variant.priceOverride ?? product.price;
+        }
+
+        if (stock <= 0) {
+          return { ...base, ok: false, reason: "out_of_stock" as const, availableStock: 0, price };
+        }
+        if (stock < item.quantity) {
+          return { ...base, ok: false, reason: "low_stock" as const, availableStock: stock, price };
+        }
+        return { ...base, ok: true, reason: null, availableStock: stock, price };
+      })
+    );
+  },
+});

@@ -11,6 +11,7 @@ type BannerType = "popup" | "topbar" | "hero";
 
 const empty = {
   type: "popup" as BannerType,
+  couponCode: "",
   titleEn: "",
   titleAr: "",
   subtitleEn: "",
@@ -35,6 +36,7 @@ export default function AdminBannersPage() {
     try {
       await create({
         type: form.type,
+        couponCode: form.couponCode || undefined,
         title: { en: form.titleEn, ar: form.titleAr },
         subtitle: form.subtitleEn || form.subtitleAr ? { en: form.subtitleEn, ar: form.subtitleAr } : undefined,
         image: form.image || undefined,
@@ -56,6 +58,7 @@ export default function AdminBannersPage() {
     await update({
       id: banner._id,
       type: banner.type,
+      couponCode: banner.couponCode,
       title: banner.title,
       subtitle: banner.subtitle,
       image: banner.image,
@@ -89,10 +92,16 @@ export default function AdminBannersPage() {
             <option value="hero">Hero Banner</option>
           </select>
           <input
+            placeholder="Coupon code revealed by the popup (e.g. REEM15)"
+            value={form.couponCode}
+            onChange={(e) => setForm({ ...form, couponCode: e.target.value.toUpperCase() })}
+            className="rounded-lg border border-line bg-cream px-3 py-2 text-sm uppercase"
+          />
+          <input
             placeholder="Image URL"
             value={form.image}
             onChange={(e) => setForm({ ...form, image: e.target.value })}
-            className="rounded-lg border border-line bg-cream px-3 py-2 text-sm sm:col-span-2"
+            className="rounded-lg border border-line bg-cream px-3 py-2 text-sm"
           />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">

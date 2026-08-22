@@ -60,14 +60,25 @@ export function ProductImage({
 }) {
   if (src) {
     return (
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        sizes={sizes}
-        className={className || "object-cover"}
-      />
+      // `fill` makes the image position:absolute, so it sizes itself
+      // against the nearest positioned ancestor. Relying on every caller
+      // to remember `relative` is a contract nothing enforces — miss it
+      // once and a 56px thumbnail paints across the whole page. This
+      // wrapper supplies the containing block itself; it is a no-op for
+      // callers that already position their own box.
+      <span className="relative block h-full w-full overflow-hidden">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes={sizes}
+          // Merge rather than replace: a caller passing transition or
+          // sizing classes should not silently lose object-cover and get
+          // a stretched image.
+          className={`object-cover ${className}`}
+        />
+      </span>
     );
   }
 

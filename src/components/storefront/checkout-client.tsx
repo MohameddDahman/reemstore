@@ -7,11 +7,13 @@ import { z } from "zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { Check, CheckCircle2, Copy, PackageSearch } from "lucide-react";
+import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
 import { Link } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
+import { useCartAvailability } from "@/lib/use-cart-availability";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -34,6 +36,8 @@ export function CheckoutClient() {
   const placeOrder = useMutation(api.orders.placeOrder);
   const symbol = settings?.currencySymbol ?? "";
   const { subtotal } = cartTotals(items);
+  const availability = useCartAvailability();
+  const remove = useCart((s) => s.remove);
 
   const [couponInput, setCouponInput] = useState("");
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
@@ -44,6 +48,7 @@ export function CheckoutClient() {
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ orderNumber: string; phone: string } | null>(null);
+  const [copiedNumber, setCopiedNumber] = useState(false);
 
   const {
     register,
@@ -80,32 +85,92 @@ export function CheckoutClient() {
       });
       clear();
       setResult({ orderNumber: res.orderNumber, phone: values.phone });
-    } catch {
-      // toast could go here; kept minimal for v1
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message.replace(/^[.*?]s*/, "")
+          : locale === "ar"
+            ? "تعذر إتمام الطلب. حاولي مرة أخرى."
+            : "Could not place the order. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
+  const copyOrderNumber = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result.orderNumber);
+      setCopiedNumber(true);
+      setTimeout(() => setCopiedNumber(false), 2000);
+    } catch {
+      // Clipboard access can be denied; the number is selectable on screen.
+      setCopiedNumber(false);
+    }
+  };
+
   if (result) {
     return (
-      <div className="mx-auto flex max-w-lg flex-col items-center px-5 py-24 text-center sm:px-8">
+      <div className="mx-auto flex w-full max-w-lg flex-col items-center px-5 py-16 text-center sm:px-8 sm:py-24">
         <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
           <CheckCircle2 className="h-14 w-14 text-success" />
         </motion.div>
-        <h1 className="mt-6 font-heading text-3xl text-ink">{t("successTitle")}</h1>
-        <p className="mt-2 text-ink-soft">
-          {t("successSubtitle", { orderNumber: result.orderNumber })}
-        </p>
+        <h1 className="mt-6 font-heading text-3xl font-bold text-ink">{t("successTitle")}</h1>
+        <p className="mt-2 text-ink-soft">{t("successSubtitle")}</p>
+
+        {/* The order number is the only key to this order — there are no
+            accounts — so it gets its own card, a copy button, and a
+            direct route to tracking rather than a mention in prose. */}
+        <div className="mt-6 w-full rounded-2xl border-2 border-dashed border-rose/40 bg-rose-mist p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">
+            {t("yourOrderNumber")}
+          </p>
+          <p
+            className="mt-1.5 select-all break-all font-mono text-xl font-bold tracking-wide text-rose-deep sm:text-2xl"
+            dir="ltr"
+          >
+            {result.orderNumber}
+          </p>
+          <button
+            type="button"
+            onClick={copyOrderNumber}
+            className="mx-auto mt-3 flex items-center gap-1.5 rounded-full border border-rose/40 bg-white px-4 py-1.5 text-xs font-semibold text-ink transition-colors hover:border-rose-deep"
+          >
+            {copiedNumber ? (
+              <>
+                <Check className="h-3.5 w-3.5 text-success" />
+                {t("numberCopied")}
+              </>
+            ) : (
+              <>
+                <Copy className="h-3.5 w-3.5" />
+                {t("copyNumber")}
+              </>
+            )}
+          </button>
+          <p className="mt-2.5 text-xs text-ink-soft">{t("saveNumberNote")}</p>
+        </div>
+
         <p className="mt-4 rounded-xl bg-cream-soft p-4 text-sm text-ink-soft">
           {t("successBody", { phone: result.phone })}
         </p>
-        <Link
-          href="/"
-          className="mt-8 rounded-full bg-ink px-8 py-3 text-sm uppercase tracking-widest text-cream"
-        >
-          {t("backHome")}
-        </Link>
+
+        <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
+          <Link
+            href="/track-order"
+            className="flex items-center justify-center gap-2 rounded-full bg-ink px-8 py-3.5 text-sm font-bold text-white"
+          >
+            <PackageSearch className="h-4 w-4" />
+            {t("trackThisOrder")}
+          </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-line px-8 py-3.5 text-sm font-bold text-ink transition-colors hover:border-ink"
+          >
+            {t("backHome")}
+          </Link>
+        </div>
       </div>
     );
   }
@@ -127,6 +192,32 @@ export function CheckoutClient() {
     <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.3fr_1fr] md:py-20">
       <form onSubmit={handleSubmit(onSubmit)} className="min-w-0 space-y-8">
         <h1 className="font-heading text-3xl text-ink">{t("title")}</h1>
+
+        {availability.hasProblems && (
+          <div className="rounded-xl border border-danger/40 bg-danger/5 p-4">
+            <p className="text-sm font-semibold text-danger">
+              {locale === "ar"
+                ? "بعض المنتجات لم تعد متاحة"
+                : "Some items are no longer available"}
+            </p>
+            <p className="mt-1 text-xs text-ink-soft">
+              {locale === "ar"
+                ? "احذفيها من السلة لإتمام الطلب."
+                : "Remove them from your bag to continue."}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                for (const item of items) {
+                  if (availability.problemFor(item)) remove(item.productId, item.variantSku);
+                }
+              }}
+              className="mt-3 rounded-full bg-ink px-5 py-2 text-xs font-semibold text-white"
+            >
+              {locale === "ar" ? "حذف غير المتاح" : "Remove unavailable items"}
+            </button>
+          </div>
+        )}
 
         <fieldset className="space-y-4">
           <legend className="mb-2 text-sm font-semibold uppercase tracking-widest text-ink">
@@ -209,7 +300,7 @@ export function CheckoutClient() {
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || availability.hasProblems}
           className="w-full rounded-full bg-ink py-4 text-sm uppercase tracking-widest text-cream transition-transform hover:scale-[1.01] disabled:opacity-50 md:hidden"
         >
           {submitting ? t("placingOrder") : t("placeOrder")}
@@ -280,7 +371,7 @@ export function CheckoutClient() {
         <button
           type="button"
           onClick={handleSubmit(onSubmit)}
-          disabled={submitting}
+          disabled={submitting || availability.hasProblems}
           className="mt-6 hidden w-full rounded-full bg-ink py-4 text-sm uppercase tracking-widest text-cream transition-transform hover:scale-[1.01] disabled:opacity-50 md:block"
         >
           {submitting ? t("placingOrder") : t("placeOrder")}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, ShoppingBag, X } from "lucide-react";
@@ -13,6 +13,7 @@ import { SearchBox } from "./search-box";
 import { useCart, cartTotals } from "@/store/cart";
 import { cn } from "@/lib/utils";
 import { useScrollLock } from "@/lib/use-scroll-lock";
+import { useEscapeKey } from "@/lib/use-escape-key";
 
 export function Header() {
   const t = useTranslations("nav");
@@ -25,7 +26,9 @@ export function Header() {
   const items = useCart((s) => s.items);
   const toggleCart = useCart((s) => s.toggle);
   const { count } = cartTotals(items);
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
   useScrollLock(mobileOpen);
+  useEscapeKey(mobileOpen, closeMobile);
 
   // Close the mobile menu on navigation — adjusted during render rather
   // than in an effect, to avoid an extra commit.
@@ -78,9 +81,16 @@ export function Header() {
           <button aria-label={t("cart")} onClick={toggleCart} className="relative">
             <ShoppingBag className="h-5 w-5 text-ink" strokeWidth={1.5} />
             {count > 0 && (
-              <span className="absolute -end-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose px-1 text-[10px] font-semibold text-white">
+              <motion.span
+                // Keyed on the count so each change replays the pop.
+                key={count}
+                initial={{ scale: 0.4 }}
+                animate={{ scale: [0.4, 1.35, 1] }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="absolute -end-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose px-1 text-[10px] font-semibold text-white"
+              >
                 {count}
-              </span>
+              </motion.span>
             )}
           </button>
         </div>

@@ -10,6 +10,9 @@ import { Link } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/store/cart";
 import { cn, formatPrice } from "@/lib/utils";
 import { useScrollLock } from "@/lib/use-scroll-lock";
+import { useEscapeKey } from "@/lib/use-escape-key";
+import { useCartAvailability } from "@/lib/use-cart-availability";
+import { AlertCircle } from "lucide-react";
 
 export function CartDrawer() {
   const t = useTranslations("cart");
@@ -25,6 +28,8 @@ export function CartDrawer() {
   const threshold = settings?.freeShippingThreshold;
   const remaining = threshold ? Math.max(threshold - subtotal, 0) : 0;
   useScrollLock(isOpen);
+  useEscapeKey(isOpen, close);
+  const availability = useCartAvailability();
 
   return (
     <AnimatePresence>
@@ -99,6 +104,24 @@ export function CartDrawer() {
                             {item.variantLabel && (
                               <p className="text-xs text-ink-soft">{item.variantLabel}</p>
                             )}
+                            {(() => {
+                              const problem = availability.problemFor(item);
+                              if (!problem) return null;
+                              const label =
+                                problem.reason === "low_stock"
+                                  ? locale === "ar"
+                                    ? `تبقى ${problem.availableStock} فقط`
+                                    : `Only ${problem.availableStock} left`
+                                  : locale === "ar"
+                                    ? "غير متوفر حالياً"
+                                    : "No longer available";
+                              return (
+                                <p className="mt-1 flex items-center gap-1 text-xs font-medium text-danger">
+                                  <AlertCircle className="h-3 w-3 shrink-0" />
+                                  {label}
+                                </p>
+                              );
+                            })()}
                           </div>
                           <button
                             onClick={() => remove(item.productId, item.variantSku)}
@@ -147,13 +170,35 @@ export function CartDrawer() {
                       {formatPrice(subtotal, symbol, locale)}
                     </span>
                   </div>
-                  <Link
-                    href="/checkout"
-                    onClick={close}
-                    className="block w-full rounded-full bg-ink py-3.5 text-center text-sm uppercase tracking-widest text-cream transition-transform hover:scale-[1.02]"
-                  >
-                    {t("checkout")}
-                  </Link>
+                  {availability.hasProblems ? (
+                    <div className="space-y-2">
+                      <p className="text-center text-xs text-danger">
+                        {locale === "ar"
+                          ? "بعض المنتجات لم تعد متاحة. احذفيها لإتمام الطلب."
+                          : "Some items are no longer available. Remove them to check out."}
+                      </p>
+                      <button
+                        onClick={() => {
+                          for (const item of items) {
+                            if (availability.problemFor(item)) {
+                              remove(item.productId, item.variantSku);
+                            }
+                          }
+                        }}
+                        className="block w-full rounded-full bg-ink py-3.5 text-center text-sm uppercase tracking-widest text-cream"
+                      >
+                        {locale === "ar" ? "حذف غير المتاح" : "Remove unavailable"}
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/checkout"
+                      onClick={close}
+                      className="block w-full rounded-full bg-ink py-3.5 text-center text-sm uppercase tracking-widest text-cream transition-transform hover:scale-[1.02]"
+                    >
+                      {t("checkout")}
+                    </Link>
+                  )}
                 </div>
               </>
             )}
