@@ -85,6 +85,7 @@ export function ProductDetail({ slug }: { slug: string }) {
               src={product.images[activeImage]}
               alt={product.name[locale]}
               departmentSlug={product.tags[0]}
+            aisleSlug={product.tags[1]}
               priority
               sizes="(max-width: 768px) 100vw, 50vw"
             />

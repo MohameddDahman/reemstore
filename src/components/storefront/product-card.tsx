@@ -69,6 +69,7 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
             src={hover ? secondImage : product.images[0]}
             alt={product.name[locale]}
             departmentSlug={product.tags[0]}
+            aisleSlug={product.tags[1]}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />

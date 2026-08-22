@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ProductIllustration, hasIllustration } from "./product-illustration";
 
 /**
  * Department identity used by the placeholder, keyed by the department
@@ -43,6 +44,7 @@ export function ProductImage({
   src,
   alt,
   departmentSlug,
+  aisleSlug,
   sizes,
   priority = false,
   className = "",
@@ -50,6 +52,8 @@ export function ProductImage({
   src?: string;
   alt: string;
   departmentSlug?: string;
+  /** Second tag on a seeded product; selects the drawn illustration. */
+  aisleSlug?: string;
   sizes?: string;
   priority?: boolean;
   className?: string;
@@ -65,6 +69,12 @@ export function ProductImage({
         className={className || "object-cover"}
       />
     );
+  }
+
+  // Prefer a drawn illustration of the actual product over a generic
+  // department card — it tells the shopper what they're buying.
+  if (hasIllustration(aisleSlug)) {
+    return <ProductIllustration aisleSlug={aisleSlug} />;
   }
 
   const look = DEPARTMENT_LOOK[departmentSlug ?? ""] ?? { icon: "🛍️", tint: "#f6f5f3" };
