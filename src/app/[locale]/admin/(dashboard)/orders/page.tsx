@@ -93,7 +93,7 @@ export default function AdminOrdersPage() {
         )}
       </div>
 
-      <div className="hidden overflow-x-auto rounded-xl border border-line bg-surface md:block">
+      <div className="hidden x-scroll rounded-xl border border-line bg-surface md:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-line text-start text-xs uppercase tracking-widest text-ink-soft">

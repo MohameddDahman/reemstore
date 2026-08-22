@@ -227,11 +227,17 @@ body {
  * cards" bug. Pinning overflow-y and touch-action fixes both:
  *
  *   overflow-y: hidden        -> not user-scrollable vertically, so wheel
- *                                events bubble up to the document
- *   touch-action: pan-x       -> the element may only consume horizontal
- *                                pans; vertical drags go to the page.
- *                                pinch-zoom stays allowed so the browser's
- *                                accessibility zoom still works.
+ *                                events bubble up to the document. This is
+ *                                what actually fixes the wheel case.
+ *   touch-action              -> BOTH axes must be listed. "pan-x" alone
+ *                                does not mean "vertical drags fall through
+ *                                to the page" — it forbids vertical panning
+ *                                for any touch starting in the rail, which
+ *                                froze the page on mobile, since rails cover
+ *                                most of the home screen. Naming pan-y as
+ *                                well lets the browser direction-lock the
+ *                                gesture: horizontal drags scroll the rail,
+ *                                vertical drags scroll the page.
  *   overscroll-behavior-x     -> reaching the end doesn't chain into a
  *                                back-navigation gesture.
  *
@@ -241,7 +247,7 @@ body {
 .h-rail {
   overflow-x: auto;
   overflow-y: hidden;
-  touch-action: pan-x pinch-zoom;
+  touch-action: pan-x pan-y pinch-zoom;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   padding-top: 0.25rem;
@@ -249,6 +255,21 @@ body {
 }
 .h-rail::-webkit-scrollbar {
   display: none;
+}
+
+/*
+ * A horizontally scrollable block that keeps its scrollbar — admin data
+ * tables, where the bar is the only hint that more columns exist.
+ *
+ * Same trap as .h-rail: "overflow-x: auto" on its own silently makes the
+ * element a vertical scroll container as well, so it eats page scrolls
+ * that start anywhere over it. Both axes have to be stated explicitly.
+ */
+.x-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x pan-y pinch-zoom;
+  overscroll-behavior-x: contain;
 }
 *::-webkit-scrollbar-track {
   background: transparent;

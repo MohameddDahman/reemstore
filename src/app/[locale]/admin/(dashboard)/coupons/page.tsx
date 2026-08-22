@@ -87,7 +87,7 @@ export default function AdminCouponsPage() {
         </button>
       </form>
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface">
+      <div className="mt-6 x-scroll rounded-xl border border-line bg-surface">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-line text-start text-xs uppercase tracking-widest text-ink-soft">
