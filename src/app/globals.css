@@ -216,6 +216,40 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/*
+ * Horizontal rail.
+ *
+ * `overflow-x: auto` alone is a trap: per spec, when one axis is not
+ * `visible` the other axis computes from `visible` to `auto`, so the rail
+ * silently becomes a VERTICAL scroll container too. It then swallows wheel
+ * and touch gestures meant for the page — the "my finger sticks on the
+ * cards" bug. Pinning overflow-y and touch-action fixes both:
+ *
+ *   overflow-y: hidden        -> not user-scrollable vertically, so wheel
+ *                                events bubble up to the document
+ *   touch-action: pan-x       -> the element may only consume horizontal
+ *                                pans; vertical drags go to the page.
+ *                                pinch-zoom stays allowed so the browser's
+ *                                accessibility zoom still works.
+ *   overscroll-behavior-x     -> reaching the end doesn't chain into a
+ *                                back-navigation gesture.
+ *
+ * Vertical padding leaves room for the cards' hover lift, which
+ * overflow-y: hidden would otherwise clip.
+ */
+.h-rail {
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x pinch-zoom;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding-top: 0.25rem;
+  padding-bottom: 0.75rem;
+}
+.h-rail::-webkit-scrollbar {
+  display: none;
+}
 *::-webkit-scrollbar-track {
   background: transparent;
 }

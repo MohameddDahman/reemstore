@@ -12,6 +12,7 @@ import { LocaleSwitcher } from "./locale-switcher";
 import { SearchBox } from "./search-box";
 import { useCart, cartTotals } from "@/store/cart";
 import { cn } from "@/lib/utils";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 export function Header() {
   const t = useTranslations("nav");
@@ -24,6 +25,7 @@ export function Header() {
   const items = useCart((s) => s.items);
   const toggleCart = useCart((s) => s.toggle);
   const { count } = cartTotals(items);
+  useScrollLock(mobileOpen);
 
   // Close the mobile menu on navigation — adjusted during render rather
   // than in an effect, to avoid an extra commit.
@@ -105,16 +107,16 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 260 }}
-              className="h-full w-[80%] max-w-xs bg-white p-6 rtl:ms-auto"
+              className="flex h-full w-[82%] max-w-xs flex-col overflow-y-auto overscroll-contain bg-white p-6 rtl:ms-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="mb-8 flex items-center justify-between">
+              <div className="sticky top-0 z-10 -mx-6 mb-4 flex items-center justify-between bg-white px-6 pb-3 pt-1">
                 <span className="font-heading text-lg font-black text-ink">{brand("name")}</span>
                 <button onClick={() => setMobileOpen(false)} aria-label="Close">
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <nav className="flex flex-col gap-1 overflow-y-auto pb-10">
+              <nav className="flex flex-col gap-1 pb-10">
                 {(tree ?? []).map((dept) => (
                   <details key={dept._id} className="group border-b border-line">
                     <summary className="flex cursor-pointer list-none items-center justify-between py-3 text-[15px] font-semibold text-ink marker:hidden">
@@ -143,9 +145,20 @@ export function Header() {
                     </div>
                   </details>
                 ))}
-                <Link href="/track-order" className="mt-4 text-base font-semibold text-ink">
-                  {t("trackOrder")}
-                </Link>
+                <div className="mt-5 flex flex-col gap-1 border-t border-line pt-4">
+                  <Link
+                    href="/deals"
+                    className="flex items-center gap-2 rounded-lg bg-rose-mist px-3 py-2.5 text-[15px] font-bold text-rose"
+                  >
+                    ⚡ {locale === "ar" ? "عروض اليوم" : "Today's Deals"}
+                  </Link>
+                  <Link href="/track-order" className="px-3 py-2.5 text-[15px] text-ink">
+                    {t("trackOrder")}
+                  </Link>
+                  <Link href="/contact" className="px-3 py-2.5 text-[15px] text-ink">
+                    {locale === "ar" ? "تواصلي معنا" : "Contact us"}
+                  </Link>
+                </div>
               </nav>
             </motion.div>
           </motion.div>

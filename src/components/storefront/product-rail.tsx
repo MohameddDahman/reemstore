@@ -46,13 +46,13 @@ export function ProductRail({
   const scroller = (
     <div
       ref={scrollerRef}
-      className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:gap-4 sm:px-0"
+      className="h-rail -mx-5 flex gap-3 px-5 sm:mx-0 sm:gap-4 sm:px-0"
     >
       {(products ?? Array.from({ length: 6 })).map((product, i) =>
         product ? (
           <div
             key={(product as Doc<"products">)._id}
-            className="w-[44%] shrink-0 snap-start sm:w-[30%] md:w-[23%] lg:w-[15.6%]"
+            className="w-[44%] shrink-0 sm:w-[30%] md:w-[23%] lg:w-[15.6%]"
           >
             <ProductCard product={product as Doc<"products">} index={i} />
           </div>

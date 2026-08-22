@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { api } from "../../../convex/_generated/api";
 import { Link } from "@/i18n/navigation";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 const SESSION_KEY = "reem-popup-seen";
 
@@ -25,6 +26,8 @@ export function PromoPopup() {
     const timer = setTimeout(() => setVisible(true), 1400);
     return () => clearTimeout(timer);
   }, [banner]);
+
+  useScrollLock(visible);
 
   const dismiss = () => {
     setVisible(false);

@@ -109,14 +109,56 @@ export const IMAGE_POOL: Record<string, string> = {
   "fc-care": "1616750819456-5cdee9b85d22",
   "fc-wash": "1645567455251-334ed4702f9b",
 
+  // Devices & appliances
+  "dv-shaver-men": "1639160534101-56eb149eba78",
+  "dv-clipper": "1631255645312-90e87c3474b9",
+  "dv-shaver-women": "1712481846921-d5df6dc4abfd",
+  "dv-straightener": "1713180760640-c9ff9eb90b2d",
+  "dv-curler": "1620331307581-1e7d27da7ab6",
+  "dv-dryer": "1712481846921-d5df6dc4abfd",
+  "dv-ipl": "1639160534101-56eb149eba78",
+  "dv-facial": "1670201203116-26644750a726",
+  "dv-mirror": "1596462502278-27bfdc403348",
+
   // Foot care
   "ft-care": "1616750819456-5cdee9b85d22",
   "ft-tools": "1656214286228-08fdbf520d1e",
 };
 
+
+/**
+ * Image keys with NO honest stock match.
+ *
+ * Free libraries simply do not carry packaged FMCG: a search for
+ * "diapers" returns lingerie models and industrial smokestacks, and
+ * sanitary protection and adult incontinence are no better. Dressing
+ * those listings in an unrelated photo would misdescribe the goods, so
+ * they seed with no image and the storefront renders a branded
+ * placeholder until the client supplies real photography.
+ */
+export const NO_HONEST_IMAGE = new Set([
+  // Packaged FMCG — searches return unrelated goods entirely.
+  "bb-diapers",
+  "bb-wipes",
+  "bb-bath",
+  "bb-bottle",
+  "ad-care",
+  "fc-care",
+  "fc-wash",
+  "hm-tissue",
+  // Hard goods whose nearest stock photo shows a different product.
+  "ad-mobility",
+  "md-masks",
+  "ft-care",
+  "ft-tools",
+  "ft-insoles",
+]);
+
 /** Falls back to a neutral bottle shot so a missing key never breaks a card. */
-export function imgFor(key: string, size = 800) {
-  return productImg(IMAGE_POOL[key] ?? IMAGE_POOL["sk-tube"], size);
+export function imgFor(key: string, size = 800): string | null {
+  if (NO_HONEST_IMAGE.has(key)) return null;
+  const id = IMAGE_POOL[key];
+  return id ? productImg(id, size) : null;
 }
 
 /** Department tile artwork, keyed by department slug. */
@@ -124,17 +166,18 @@ export const DEPARTMENT_IMAGES: Record<string, string> = {
   "skin-care": "sk-pink-flatlay",
   "hair-care": "hr-pink-duo",
   makeup: "mk-rose-flatlay",
-  "mother-baby": "bb-diapers",
-  "adult-care": "ad-care",
+  "mother-baby": "bb-bath",
+  "adult-care": "md-supplies",
   "personal-care": "pc-soap",
   "oral-care": "or-toothpaste",
   "men-care": "mn-shave",
-  "feminine-care": "fc-wash",
-  "foot-care": "ft-care",
+  "feminine-care": "pc-shower",
+  "foot-care": "pc-soap",
   vitamins: "vt-capsules",
   "medical-supplies": "md-device",
   fragrance: "fr-clear",
   "home-essentials": "hm-clean",
+  "devices-appliances": "dv-straightener",
 };
 
 /** Hero carousel slides — big landscape artwork behind the copy. */

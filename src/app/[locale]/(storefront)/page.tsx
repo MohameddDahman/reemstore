@@ -75,6 +75,14 @@ export default async function HomePage({
         accent
       />
 
+      <DepartmentRail
+        slug="devices-appliances"
+        titleEn="Devices & Appliances"
+        titleAr="الأجهزة والمستلزمات الكهربائية"
+        subEn="Shavers, trimmers, straighteners and dryers"
+        subAr="ماكينات حلاقة ومكواة شعر وسشوار"
+      />
+
       <BrandRail />
 
       <DepartmentRail

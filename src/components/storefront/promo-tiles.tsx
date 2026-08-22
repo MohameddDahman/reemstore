@@ -18,7 +18,7 @@ const tileImg = (id: string) => `${UNSPLASH}${id}?w=900&h=700&q=80&auto=format&f
 
 const TILES = [
   {
-    href: "/category/skincare",
+    href: "/category/skin-care",
     image: tileImg("1670201203116-26644750a726"),
     en: { kicker: "Skincare", title: "Build your routine", cta: "Shop skincare" },
     ar: { kicker: "العناية بالبشرة", title: "ابني روتينك", cta: "تسوقي العناية" },

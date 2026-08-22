@@ -47,7 +47,7 @@ export function CategoryPageClient({ slug }: { slug: string }) {
       </div>
 
       {subs.length > 0 && (
-        <div className="no-scrollbar -mx-5 mb-8 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
+        <div className="h-rail -mx-5 mb-8 flex gap-2 px-5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
           {subs.map((sub) => (
             <Link
               key={sub._id}

@@ -217,5 +217,26 @@
   "common": {
     "viewAll": "View All",
     "shopNow": "Shop Now"
+  },
+  "browse": {
+    "searchTitle": "Search results",
+    "searchSubtitle": "Filter by department or brand to narrow things down.",
+    "dealsTitle": "Today's Deals",
+    "dealsSubtitle": "Every reduced price in the store, biggest discount first."
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Questions about an order, a product or delivery — here's how to reach us.",
+    "callTitle": "Call the store",
+    "callBody": "Sat–Thu, 10:00–20:00. We confirm every order by phone before it ships.",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "Send a photo of what you need and we'll tell you if it's in stock.",
+    "deliveryTitle": "Delivery",
+    "deliveryBody": "2–4 days across Egypt. Free over L.E 600, otherwise L.E 40.",
+    "payTitle": "Payment",
+    "payBody": "Cash on delivery only. Pay the courier when your order arrives.",
+    "orderTitle": "Checking on an order?",
+    "orderBody": "Track it with your order number and the phone number you used.",
+    "orderCta": "Track my order"
   }
 }

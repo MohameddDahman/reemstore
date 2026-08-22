@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useQuery } from "convex/react";
 import { Search, X } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { formatPrice } from "@/lib/utils";
 import { useCurrencySymbol } from "@/lib/use-currency";
 
@@ -17,6 +17,7 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
   const [debounced, setDebounced] = useState("");
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const symbol = useCurrencySymbol();
 
   // Debounce so we aren't issuing a Convex search query per keystroke.
@@ -35,6 +36,15 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
 
   const results = useQuery(api.products.search, debounced ? { term: debounced } : "skip");
 
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = term.trim();
+    if (!q) return;
+    setOpen(false);
+    onNavigate?.();
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  };
+
   const close = () => {
     setOpen(false);
     setTerm("");
@@ -43,7 +53,10 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div ref={wrapRef} className="relative w-full">
-      <div className="flex items-center gap-2 rounded-full border border-line bg-cream-soft px-4 py-2 focus-within:border-ink">
+      <form
+        onSubmit={submit}
+        className="flex items-center gap-2 rounded-full border border-line bg-cream-soft px-4 py-2 focus-within:border-ink"
+      >
         <Search className="h-4 w-4 shrink-0 text-ink-soft" />
         <input
           value={term}
@@ -56,11 +69,11 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
           className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
         />
         {term && (
-          <button onClick={() => setTerm("")} aria-label="Clear">
+          <button type="button" onClick={() => setTerm("")} aria-label="Clear">
             <X className="h-3.5 w-3.5 text-ink-soft" />
           </button>
         )}
-      </div>
+      </form>
 
       {open && debounced && (
         <div className="absolute inset-x-0 top-full z-50 mt-2 max-h-[60vh] overflow-y-auto rounded-xl border border-line bg-white p-2 shadow-xl">
@@ -71,6 +84,19 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
             <p className="px-3 py-4 text-sm text-ink-soft">
               {locale === "ar" ? "لا توجد نتائج" : "No results"}
             </p>
+          )}
+          {results && results.length > 0 && (
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                const q = debounced;
+                close();
+                router.push(`/search?q=${encodeURIComponent(q)}`);
+              }}
+              className="mb-1 w-full rounded-lg bg-sand px-3 py-2 text-start text-sm font-semibold text-ink hover:bg-sand-deep"
+            >
+              {locale === "ar" ? `عرض كل النتائج عن "${debounced}"` : `See all results for "${debounced}"`}
+            </button>
           )}
           {results?.map((product) => (
             <Link

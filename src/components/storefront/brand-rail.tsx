@@ -31,7 +31,7 @@ export function BrandRail() {
           </span>
         </div>
 
-        <div className="no-scrollbar -mx-5 flex gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:px-0">
+        <div className="h-rail -mx-5 flex gap-3 px-5 sm:mx-0 sm:px-0">
           {(brands ?? Array.from({ length: 10 })).map((brand, i) =>
             brand ? (
               <Link

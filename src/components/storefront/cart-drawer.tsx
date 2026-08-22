@@ -9,6 +9,7 @@ import { api } from "../../../convex/_generated/api";
 import { Link } from "@/i18n/navigation";
 import { useCart, cartTotals } from "@/store/cart";
 import { cn, formatPrice } from "@/lib/utils";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 export function CartDrawer() {
   const t = useTranslations("cart");
@@ -23,6 +24,7 @@ export function CartDrawer() {
   const { subtotal } = cartTotals(items);
   const threshold = settings?.freeShippingThreshold;
   const remaining = threshold ? Math.max(threshold - subtotal, 0) : 0;
+  useScrollLock(isOpen);
 
   return (
     <AnimatePresence>
@@ -82,7 +84,7 @@ export function CartDrawer() {
                   </div>
                 ) : null}
 
-                <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+                <div className="flex-1 space-y-5 overflow-y-auto overscroll-contain px-6 py-5">
                   {items.map((item) => (
                     <div key={`${item.productId}-${item.variantSku ?? ""}`} className="flex gap-4">
                       <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-lg bg-cream-soft">

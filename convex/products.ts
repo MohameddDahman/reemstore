@@ -223,3 +223,100 @@ export const remove = mutation({
     await ctx.db.delete(id);
   },
 });
+
+/**
+ * One query behind /search, /deals and brand pages.
+ *
+ * Every filter is optional and they compose, so the same endpoint serves
+ * "everything on sale", "everything by this brand", "shampoo matching
+ * 'keratin'", or any combination — which is what a marketplace's browse
+ * page actually needs.
+ */
+export const browse = query({
+  args: {
+    term: v.optional(v.string()),
+    brandSlug: v.optional(v.string()),
+    categorySlug: v.optional(v.string()),
+    onSale: v.optional(v.boolean()),
+    sort: v.optional(
+      v.union(
+        v.literal("relevance"),
+        v.literal("newest"),
+        v.literal("price_asc"),
+        v.literal("price_desc"),
+        v.literal("discount")
+      )
+    ),
+  },
+  handler: async (ctx, { term, brandSlug, categorySlug, onSale, sort }) => {
+    const trimmed = term?.trim();
+
+    let products = trimmed
+      ? await ctx.db
+          .query("products")
+          .withSearchIndex("search_name", (q) =>
+            q.search("searchText", trimmed).eq("status", "active")
+          )
+          .take(200)
+      : await ctx.db
+          .query("products")
+          .withIndex("by_status", (q) => q.eq("status", "active"))
+          .collect();
+
+    if (brandSlug) {
+      const brand = await ctx.db
+        .query("brands")
+        .withIndex("by_slug", (q) => q.eq("slug", brandSlug))
+        .unique();
+      products = brand ? products.filter((p) => p.brandId === brand._id) : [];
+    }
+
+    if (categorySlug) {
+      const category = await ctx.db
+        .query("categories")
+        .withIndex("by_slug", (q) => q.eq("slug", categorySlug))
+        .unique();
+      if (!category) {
+        products = [];
+      } else {
+        // Department slugs must match their aisles too.
+        const children = await ctx.db
+          .query("categories")
+          .withIndex("by_parent", (q) => q.eq("parentId", category._id))
+          .collect();
+        const ids = new Set<string>([category._id, ...children.map((c) => c._id)]);
+        products = products.filter((p) => ids.has(p.categoryId));
+      }
+    }
+
+    if (onSale) {
+      products = products.filter(
+        (p) => p.compareAtPrice != null && p.compareAtPrice > p.price
+      );
+    }
+
+    const discountOf = (p: (typeof products)[number]) =>
+      p.compareAtPrice ? (p.compareAtPrice - p.price) / p.compareAtPrice : 0;
+
+    switch (sort) {
+      case "price_asc":
+        products.sort((a, b) => a.price - b.price);
+        break;
+      case "price_desc":
+        products.sort((a, b) => b.price - a.price);
+        break;
+      case "discount":
+        products.sort((a, b) => discountOf(b) - discountOf(a));
+        break;
+      case "newest":
+        products.sort((a, b) => b.createdAt - a.createdAt);
+        break;
+      default:
+        // "relevance" keeps the search index's own ordering; with no term
+        // there is nothing to be relevant to, so fall back to newest.
+        if (!trimmed) products.sort((a, b) => b.createdAt - a.createdAt);
+    }
+
+    return products;
+  },
+});

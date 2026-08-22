@@ -74,7 +74,7 @@ export const seedStore = internalMutation({
         const subFields = {
           name: sub.name,
           slug: sub.slug,
-          image: sub.products[0] ? imgFor(sub.products[0].img, 600) : undefined,
+          image: sub.products[0] ? imgFor(sub.products[0].img, 600) ?? undefined : undefined,
           icon: undefined,
           parentId: deptId,
           order: s,
@@ -100,7 +100,9 @@ export const seedStore = internalMutation({
             shortDescription: undefined,
             categoryId: subId,
             brandId: brandIds[productIndex % brandIds.length],
-            images: [imgFor(prod.img), imgFor(prod.img, 900)],
+            images: [imgFor(prod.img), imgFor(prod.img, 900)].filter(
+              (url): url is string => url !== null
+            ),
             price: prod.price,
             compareAtPrice: prod.was,
             variants: [],

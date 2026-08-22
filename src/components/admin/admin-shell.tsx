@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 const NAV = [
   { key: "dashboard", href: "/admin", icon: LayoutDashboard },
@@ -40,6 +41,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const { signOut } = useAuthActions();
   const admin = useQuery(api.adminAuth.currentAdmin);
   const [menuOpen, setMenuOpen] = useState(false);
+  useScrollLock(menuOpen);
 
   // Close the mobile drawer on navigation. Adjusted during render (React's
   // recommended pattern for resetting state on a changing value) instead of
@@ -124,7 +126,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 280 }}
-            className="fixed inset-y-0 start-0 z-50 flex w-72 max-w-[85vw] flex-col overflow-y-auto border-e border-line bg-surface p-5 md:hidden rtl:[--tw-enter-translate-x:100%]"
+            className="fixed inset-y-0 start-0 z-50 flex w-72 max-w-[85vw] flex-col overflow-y-auto overscroll-contain border-e border-line bg-surface p-5 md:hidden rtl:[--tw-enter-translate-x:100%]"
           >
             <div className="mb-6 flex items-center justify-between">
               <Link href="/admin" className="font-heading text-xl text-ink">

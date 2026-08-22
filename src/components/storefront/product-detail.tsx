@@ -11,6 +11,7 @@ import { api } from "../../../convex/_generated/api";
 import { useCart } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import { DEFAULT_CURRENCY_SYMBOL } from "@/lib/use-currency";
+import { ProductImage } from "./product-image";
 import { ReviewsSection } from "./reviews-section";
 import { ProductCard } from "./product-card";
 
@@ -80,15 +81,13 @@ export function ProductDetail({ slug }: { slug: string }) {
             transition={{ duration: 0.4 }}
             className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-cream-soft"
           >
-            {product.images[activeImage] && (
-              <Image
-                src={product.images[activeImage]}
-                alt={product.name[locale]}
-                fill
-                priority
-                className="object-cover"
-              />
-            )}
+            <ProductImage
+              src={product.images[activeImage]}
+              alt={product.name[locale]}
+              departmentSlug={product.tags[0]}
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </motion.div>
           {product.images.length > 1 && (
             <div className="mt-4 flex gap-3">

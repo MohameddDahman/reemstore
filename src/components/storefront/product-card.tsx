@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
@@ -10,6 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { useCart } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import { useCurrencySymbol } from "@/lib/use-currency";
+import { ProductImage } from "./product-image";
 import type { Doc } from "../../../convex/_generated/dataModel";
 
 export function ProductCard({ product, index = 0 }: { product: Doc<"products">; index?: number }) {
@@ -65,15 +65,13 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
         onMouseLeave={() => setHover(false)}
       >
         <div className="relative aspect-square overflow-hidden rounded-lg bg-cream-soft">
-          {product.images[0] && (
-            <Image
-              src={hover ? secondImage : product.images[0]}
-              alt={product.name[locale]}
-              fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-            />
-          )}
+          <ProductImage
+            src={hover ? secondImage : product.images[0]}
+            alt={product.name[locale]}
+            departmentSlug={product.tags[0]}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          />
 
           <div className="absolute start-2 top-2 flex flex-col gap-1">
             {onSale && (

@@ -93,32 +93,33 @@ export function FlashDeals() {
   return (
     <section className="border-y border-rose/20 bg-gradient-to-b from-rose-mist to-white py-8">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-rose text-white">
-              <Zap className="h-5 w-5" fill="currentColor" />
-            </span>
-            <div>
-              <h2 className="font-heading text-xl font-extrabold leading-tight text-ink sm:text-2xl">
-                {locale === "ar" ? "عروض اليوم" : "Today's Deals"}
-              </h2>
-              <p className="text-xs text-ink-soft">
-                {locale === "ar"
-                  ? "أسعار مخفضة تنتهي منتصف الليل"
-                  : "Reduced prices, gone at midnight"}
-              </p>
+        <div className="mb-5 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose text-white">
+                <Zap className="h-5 w-5" fill="currentColor" />
+              </span>
+              <div className="min-w-0">
+                <h2 className="truncate font-heading text-xl font-extrabold leading-tight text-ink sm:text-2xl">
+                  {locale === "ar" ? "عروض اليوم" : "Today's Deals"}
+                </h2>
+                <p className="truncate text-xs text-ink-soft">
+                  {locale === "ar"
+                    ? "أسعار مخفضة تنتهي منتصف الليل"
+                    : "Reduced prices, gone at midnight"}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <Countdown locale={locale} />
             <Link
               href="/deals"
-              className="hidden text-sm font-semibold text-rose underline-offset-4 hover:underline sm:block"
+              className="shrink-0 rounded-full border border-rose px-3.5 py-1.5 text-xs font-semibold text-rose transition-colors hover:bg-rose hover:text-white sm:text-sm"
             >
               {locale === "ar" ? "عرض الكل" : "View all"}
             </Link>
           </div>
+
+          <Countdown locale={locale} />
         </div>
 
         <ProductRail products={deals} bare />

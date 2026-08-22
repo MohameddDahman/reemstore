@@ -290,8 +290,8 @@ export const DEPARTMENTS: SeedDept[] = [
         slug: "mobility-comfort",
         name: { en: "Mobility & Comfort", ar: "الحركة والراحة" },
         products: [
-          p("walking-stick-adj", "Adjustable Walking Stick", "عصا مشي قابلة للتعديل", 380, "md-supplies"),
-          p("orthopedic-cushion", "Orthopedic Seat Cushion", "وسادة جلوس طبية", 520, "md-supplies", { isNew: true }),
+          p("walking-stick-adj", "Adjustable Walking Stick", "عصا مشي قابلة للتعديل", 380, "ad-mobility"),
+          p("orthopedic-cushion", "Orthopedic Seat Cushion", "وسادة جلوس طبية", 520, "ad-mobility", { isNew: true }),
         ],
       },
       {
@@ -473,8 +473,8 @@ export const DEPARTMENTS: SeedDept[] = [
         slug: "insoles",
         name: { en: "Insoles & Support", ar: "نعال ودعامات" },
         products: [
-          p("gel-insoles", "Gel Comfort Insoles", "نعال جل مريحة", 185, "ft-tools"),
-          p("arch-support-insole", "Arch Support Orthotic Insole", "نعل طبي لدعم القوس", 320, "ft-tools"),
+          p("gel-insoles", "Gel Comfort Insoles", "نعال جل مريحة", 185, "ft-insoles"),
+          p("arch-support-insole", "Arch Support Orthotic Insole", "نعل طبي لدعم القوس", 320, "ft-insoles"),
         ],
       },
     ],
@@ -559,8 +559,8 @@ export const DEPARTMENTS: SeedDept[] = [
         slug: "masks-gloves",
         name: { en: "Masks & Gloves", ar: "كمامات وقفازات" },
         products: [
-          p("surgical-masks-50", "3-Ply Surgical Masks — 50pcs", "كمامات جراحية ٣ طبقات - ٥٠ قطعة", 75, "md-supplies"),
-          p("nitrile-gloves-100", "Nitrile Gloves — 100pcs", "قفازات نيتريل - ١٠٠ قطعة", 260, "md-supplies"),
+          p("surgical-masks-50", "3-Ply Surgical Masks — 50pcs", "كمامات جراحية ٣ طبقات - ٥٠ قطعة", 75, "md-masks"),
+          p("nitrile-gloves-100", "Nitrile Gloves — 100pcs", "قفازات نيتريل - ١٠٠ قطعة", 260, "md-masks"),
         ],
       },
     ],
@@ -629,6 +629,68 @@ export const DEPARTMENTS: SeedDept[] = [
       },
     ],
   },
+  {
+    slug: "devices-appliances",
+    name: { en: "Devices & Appliances", ar: "الأجهزة والمستلزمات الكهربائية" },
+    icon: "🔌",
+    subs: [
+      {
+        slug: "mens-shavers",
+        name: { en: "Men's Shavers & Trimmers", ar: "ماكينات حلاقة الرجال" },
+        products: [
+          p("rotary-shaver-wet-dry", "Rotary Electric Shaver — Wet & Dry", "ماكينة حلاقة دوارة - جاف ومبلل", 2450, "dv-shaver-men", { featured: true, was: 2990 }),
+          p("foil-shaver-rechargeable", "Rechargeable Foil Shaver", "ماكينة حلاقة بشفرة رقائقية قابلة للشحن", 1850, "dv-shaver-men", { was: 2200 }),
+          p("beard-trimmer-20-settings", "Beard Trimmer — 20 Length Settings", "ماكينة تهذيب اللحية - ٢٠ درجة طول", 1290, "dv-clipper", { isNew: true }),
+          p("hair-clipper-pro", "Professional Hair Clipper", "ماكينة قص شعر احترافية", 1650, "dv-clipper", { featured: true }),
+          p("nose-ear-trimmer", "Nose & Ear Hair Trimmer", "ماكينة تهذيب شعر الأنف والأذن", 420, "dv-clipper"),
+          p("grooming-kit-10in1", "10-in-1 Grooming Kit", "طقم عناية ١٠ في ١", 1980, "dv-clipper", { was: 2400 }),
+        ],
+      },
+      {
+        slug: "womens-shavers",
+        name: { en: "Women's Shavers & Epilators", ar: "ماكينات إزالة الشعر النسائية" },
+        products: [
+          p("lady-shaver-cordless", "Cordless Lady Shaver", "ماكينة حلاقة نسائية لاسلكية", 890, "dv-shaver-women", { featured: true }),
+          p("epilator-wet-dry", "Wet & Dry Epilator", "جهاز إزالة الشعر جاف ومبلل", 2190, "dv-shaver-women", { was: 2650 }),
+          p("ipl-hair-removal", "IPL Hair Removal Device", "جهاز إزالة الشعر بالليزر المنزلي IPL", 5900, "dv-ipl", { featured: true, isNew: true, was: 7200 }),
+          p("facial-hair-trimmer", "Precision Facial Hair Trimmer", "ماكينة تهذيب شعر الوجه الدقيقة", 480, "dv-shaver-women" ),
+          p("bikini-trimmer", "Bikini Line Trimmer", "ماكينة تهذيب منطقة البيكيني", 620, "dv-shaver-women"),
+        ],
+      },
+      {
+        slug: "hair-styling-tools",
+        name: { en: "Straighteners & Dryers", ar: "مكواة الشعر والسشوار" },
+        products: [
+          p("ceramic-straightener", "Ceramic Hair Straightener", "مكواة شعر سيراميك", 1350, "dv-straightener", { featured: true, was: 1690 }),
+          p("titanium-straightener-pro", "Titanium Pro Straightener", "مكواة شعر تيتانيوم احترافية", 2450, "dv-straightener", { isNew: true }),
+          p("ionic-hair-dryer-2200", "Ionic Hair Dryer 2200W", "سشوار أيوني ٢٢٠٠ وات", 1490, "dv-dryer", { featured: true }),
+          p("travel-hair-dryer", "Compact Travel Hair Dryer", "سشوار سفر صغير", 690, "dv-dryer", { was: 850 }),
+          p("curling-wand-32", "Curling Wand 32mm", "جهاز تجعيد الشعر ٣٢ مم", 980, "dv-curler"),
+          p("hot-air-brush", "Hot Air Volumising Brush", "فرشاة الهواء الساخن للتصفيف", 1180, "dv-curler", { isNew: true }),
+          p("multi-styler-5in1", "5-in-1 Multi Styler Set", "طقم تصفيف ٥ في ١", 3200, "dv-straightener", { was: 3900 }),
+        ],
+      },
+      {
+        slug: "personal-care-devices",
+        name: { en: "Personal Care Devices", ar: "أجهزة العناية الشخصية" },
+        products: [
+          p("facial-cleansing-brush", "Sonic Facial Cleansing Brush", "فرشاة تنظيف الوجه بالموجات", 890, "dv-facial", { isNew: true }),
+          p("electric-callus-device", "Electric Callus Remover", "جهاز إزالة الجلد الميت الكهربائي", 520, "dv-facial"),
+          p("manicure-pedicure-set", "Electric Manicure & Pedicure Set", "طقم مانيكير وبديكير كهربائي", 760, "dv-facial", { was: 950 }),
+          p("led-makeup-mirror", "LED Lighted Makeup Mirror", "مرآة مكياج بإضاءة LED", 1150, "dv-mirror", { featured: true }),
+        ],
+      },
+      {
+        slug: "device-accessories",
+        name: { en: "Accessories & Spares", ar: "ملحقات وقطع غيار" },
+        products: [
+          p("shaver-replacement-heads", "Shaver Replacement Heads", "رؤوس بديلة لماكينة الحلاقة", 680, "dv-shaver-men"),
+          p("clipper-guard-set", "Clipper Guard Comb Set", "طقم أمشاط ماكينة القص", 240, "dv-clipper"),
+          p("heat-resistant-mat", "Heat-Resistant Styling Mat", "حصيرة مقاومة للحرارة", 180, "dv-straightener"),
+        ],
+      },
+    ],
+  },
 ];
 
 /** Brands the marketplace resells — shown as a browsable rail. */
@@ -637,6 +699,7 @@ export const BRANDS = [
   "Johnson's", "Pampers", "Molfix", "Sensodyne", "Signal", "Oral-B",
   "Gillette", "Always", "Eva", "Bioderma", "La Roche-Posay", "CeraVe",
   "Neutrogena", "Centrum", "Dettol", "Fine", "Persil", "Abu Auf",
+  "Philips", "Braun", "Remington", "Babyliss", "Panasonic", "Kemei",
 ];
 
 export const STORE_SETTINGS = {
