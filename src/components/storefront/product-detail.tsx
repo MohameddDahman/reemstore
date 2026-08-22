@@ -29,6 +29,7 @@ export function ProductDetail({ slug }: { slug: string }) {
   const [variantIdx, setVariantIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const add = useCart((s) => s.add);
+  const openCart = useCart((s) => s.open);
   const symbol = settings?.currencySymbol ?? DEFAULT_CURRENCY_SYMBOL;
 
   const variant = product?.variants[variantIdx];
@@ -66,7 +67,10 @@ export function ProductDetail({ slug }: { slug: string }) {
       },
       quantity
     );
-    toast.success(product.name[locale]);
+    toast.success(t("added"), {
+      description: product.name[locale],
+      action: { label: t("viewBag"), onClick: openCart },
+    });
   };
 
   return (

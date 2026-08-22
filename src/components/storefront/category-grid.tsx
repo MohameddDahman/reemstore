@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Link } from "@/i18n/navigation";
+import { REVEAL_VIEWPORT, revealFrom, revealTo, revealTransition } from "@/lib/reveal";
 
 export function CategoryGrid() {
   const locale = useLocale() as "ar" | "en";
@@ -24,10 +25,10 @@ export function CategoryGrid() {
         {(categories ?? []).map((cat, i) => (
           <motion.div
             key={cat._id}
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: i * 0.06 }}
+            initial={revealFrom}
+            whileInView={revealTo}
+            viewport={REVEAL_VIEWPORT}
+            transition={revealTransition(i)}
           >
             <Link href={`/category/${cat.slug}`} className="group block">
               <div className="relative aspect-[5/4] overflow-hidden rounded-lg bg-cream-soft">

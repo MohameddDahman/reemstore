@@ -11,11 +11,13 @@ import { formatPrice } from "@/lib/utils";
 import { useCurrencySymbol } from "@/lib/use-currency";
 import { ProductImage } from "./product-image";
 import type { Doc } from "../../../convex/_generated/dataModel";
+import { REVEAL_VIEWPORT, revealFrom, revealTo, revealTransition } from "@/lib/reveal";
 
 export function ProductCard({ product, index = 0 }: { product: Doc<"products">; index?: number }) {
   const locale = useLocale() as "ar" | "en";
   const t = useTranslations("product");
   const add = useCart((s) => s.add);
+  const openCart = useCart((s) => s.open);
   const [hover, setHover] = useState(false);
   // Brief confirmation on the button itself. A toast alone makes people
   // wonder whether the tap registered, and they tap again.
@@ -50,17 +52,20 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
       },
       1
     );
-    toast.success(product.name[locale]);
+    toast.success(t("added"), {
+      description: product.name[locale],
+      action: { label: t("viewBag"), onClick: openCart },
+    });
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1400);
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: (index % 4) * 0.06, ease: [0.16, 1, 0.3, 1] as const }}
+      initial={revealFrom}
+      whileInView={revealTo}
+      viewport={REVEAL_VIEWPORT}
+      transition={revealTransition(index % 4)}
       className="group flex h-full flex-col"
     >
       <Link

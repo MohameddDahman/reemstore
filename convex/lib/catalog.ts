@@ -457,7 +457,18 @@ export const DEPARTMENTS: SeedDept[] = [
         products: [
           p("cracked-heel-cream", "Cracked Heel Repair Cream 100ml", "كريم علاج تشققات القدم ١٠٠ مل", 165, "ft-care", { featured: true, was: 200 }),
           p("antifungal-foot-spray", "Antifungal Foot Spray", "بخاخ مضاد للفطريات للقدم", 195, "ft-care"),
-          p("foot-deodorant-powder", "Foot Deodorising Powder", "بودرة إزالة روائح القدم", 110, "ft-care"),
+        ],
+      },
+      {
+        slug: "foot-sweat",
+        name: { en: "Sweat & Odour", ar: "التعرق والروائح" },
+        products: [
+          p("anti-sweat-foot-powder", "Anti-Sweat Foot Powder 100g", "بودرة القدم لمنع التعرق ١٠٠ جم", 95, "ft-sweat", { featured: true }),
+          p("medicated-foot-powder", "Medicated Foot Powder 200g", "بودرة طبية للقدم ٢٠٠ جم", 145, "ft-sweat", { was: 175 }),
+          p("foot-deodorant-powder", "Foot Deodorising Powder", "بودرة إزالة روائح القدم", 110, "ft-sweat"),
+          p("antiperspirant-foot-spray", "Antiperspirant Foot Spray 150ml", "بخاخ مضاد للتعرق للقدم ١٥٠ مل", 175, "ft-sweat", { isNew: true }),
+          p("shoe-deodorising-powder", "Shoe Deodorising Powder 150g", "بودرة معطرة للأحذية ١٥٠ جم", 85, "ft-sweat"),
+          p("sweat-absorbing-insole-pads", "Sweat-Absorbing Insole Pads", "نعال ماصة للعرق", 120, "ft-sweat"),
         ],
       },
       {

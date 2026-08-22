@@ -4,6 +4,7 @@ import { useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { REVEAL_VIEWPORT, revealFrom, revealTo, revealTransition } from "@/lib/reveal";
 
 /**
  * Three merchandising tiles under the hero — the "shop this offer" blocks
@@ -48,10 +49,10 @@ export function PromoTiles() {
           return (
             <motion.div
               key={tile.href}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              initial={revealFrom}
+              whileInView={revealTo}
+              viewport={REVEAL_VIEWPORT}
+              transition={revealTransition(i)}
             >
               <Link
                 href={tile.href}

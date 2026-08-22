@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Link } from "@/i18n/navigation";
+import { REVEAL_VIEWPORT, revealFrom, revealTo, revealTransition } from "@/lib/reveal";
 
 /**
  * Every department, in one glance.
@@ -40,10 +41,10 @@ export function DepartmentGrid() {
             dept ? (
               <motion.div
                 key={dept._id}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.35, delay: (i % 7) * 0.04 }}
+                initial={revealFrom}
+                whileInView={revealTo}
+                viewport={REVEAL_VIEWPORT}
+                transition={revealTransition(i % 7)}
               >
                 <Link
                   href={`/category/${dept.slug}`}

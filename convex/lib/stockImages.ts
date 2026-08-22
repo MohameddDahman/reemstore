@@ -150,6 +150,7 @@ export const NO_HONEST_IMAGE = new Set([
   "ad-mobility",
   "md-masks",
   "ft-care",
+  "ft-sweat",
   "ft-tools",
   "ft-insoles",
 ]);

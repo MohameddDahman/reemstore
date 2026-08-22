@@ -48,7 +48,12 @@ export const useCart = create<CartState>()(
         } else {
           items.push({ ...item, quantity: Math.min(quantity, item.maxStock) });
         }
-        set({ items, isOpen: true });
+        // Deliberately does NOT open the drawer. Throwing a full-screen
+        // panel over the page after every tap interrupts browsing and
+        // costs the shopper their place in the shelf they were reading.
+        // The header badge pops and a toast confirms instead, with the
+        // drawer one tap away from that toast.
+        set({ items });
       },
       remove: (productId, variantSku) => {
         const key = lineKey(productId, variantSku);

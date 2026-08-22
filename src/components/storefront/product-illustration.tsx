@@ -164,6 +164,41 @@ function CreamTube({ tint, accent }: { tint: string; accent: string }) {
   );
 }
 
+/**
+ * Talc-style shaker: straight-sided tub, domed cap with sprinkle holes,
+ * and a little powder falling. Foot powders are the one product in this
+ * aisle a cream tube would misrepresent — the shaker top is how a shopper
+ * recognises it on a shelf.
+ */
+function PowderBottle({ tint, accent }: { tint: string; accent: string }) {
+  return (
+    <Frame tint={tint}>
+      {/* Body */}
+      <rect x="70" y="66" width="60" height="94" rx="10" fill="#ffffff" stroke={LINE} strokeWidth="2.5" />
+      {/* Label band */}
+      <rect x="70" y="96" width="60" height="40" fill={accent} opacity="0.22" />
+      <path d="M82 110h36M82 122h24" stroke={accent} strokeWidth="4" strokeLinecap="round" />
+      {/* Shoulder + domed shaker cap */}
+      <path d="M74 66h52l-6-12H80Z" fill="#ffffff" stroke={LINE} strokeWidth="2.5" />
+      <path d="M80 54h40a20 20 0 0 0-40 0Z" fill={accent} />
+      {/* Sprinkle holes */}
+      <g fill="#ffffff">
+        <circle cx="92" cy="44" r="2.4" />
+        <circle cx="100" cy="41" r="2.4" />
+        <circle cx="108" cy="44" r="2.4" />
+      </g>
+      {/* Powder in the air */}
+      <g fill={accent} opacity="0.55">
+        <circle cx="138" cy="46" r="3" />
+        <circle cx="148" cy="58" r="2.2" />
+        <circle cx="143" cy="70" r="1.8" />
+        <circle cx="54" cy="52" r="2.4" />
+        <circle cx="47" cy="64" r="1.8" />
+      </g>
+    </Frame>
+  );
+}
+
 function Insole() {
   return (
     <Frame tint="#fbe8d6">
@@ -226,6 +261,7 @@ const BY_AISLE: Record<string, () => React.ReactElement> = {
   "intimate-wash": () => <CreamTube tint="#fbdce9" accent="#e79ec0" />,
   "sanitary-pads": SanitaryPad,
   "tissues-paper": TissueBox,
+  "foot-sweat": () => <PowderBottle tint="#eef4fb" accent="#6f9fd0" />,
   "foot-treatments": () => <CreamTube tint="#fbe8d6" accent="#e0a63c" />,
   "foot-tools": () => <CreamTube tint="#fbe8d6" accent="#c9a06a" />,
   insoles: Insole,

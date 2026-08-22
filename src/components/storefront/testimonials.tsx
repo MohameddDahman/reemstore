@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
+import { REVEAL_VIEWPORT, revealFrom, revealTo, revealTransition } from "@/lib/reveal";
 
 export function Testimonials() {
   const locale = useLocale() as "ar" | "en";
@@ -24,10 +25,10 @@ export function Testimonials() {
         {(reviews ?? []).map((review, i) => (
           <motion.div
             key={review._id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+            initial={revealFrom}
+            whileInView={revealTo}
+            viewport={REVEAL_VIEWPORT}
+            transition={revealTransition(i % 3)}
             className="flex flex-col rounded-2xl border border-line bg-surface p-6"
           >
             <Quote className="h-5 w-5 text-rose" />

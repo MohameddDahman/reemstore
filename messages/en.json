@@ -89,7 +89,8 @@
     "yourReview": "Your review",
     "reviewSubmitted": "Thank you! Your review will appear after a quick check.",
     "chooseOptions": "Choose Options",
-    "added": "Added"
+    "added": "Added",
+    "viewBag": "View bag"
   },
   "cart": {
     "title": "Your Bag",

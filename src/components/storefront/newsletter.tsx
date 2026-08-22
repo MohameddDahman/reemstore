@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { RadialGlowButton } from "@/components/ui/radial-glow-button";
+import { REVEAL_VIEWPORT, revealFrom, revealTo, revealTransition } from "@/lib/reveal";
 
 export function Newsletter() {
   const t = useTranslations("home.newsletter");
@@ -20,10 +21,10 @@ export function Newsletter() {
   return (
     <section className="mx-auto max-w-3xl px-5 py-24 text-center sm:px-8">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        initial={revealFrom}
+        whileInView={revealTo}
+        viewport={REVEAL_VIEWPORT}
+        transition={revealTransition()}
       >
         <h2 className="font-heading text-3xl text-ink sm:text-4xl">{t("title")}</h2>
         <p className="mt-3 text-ink-soft">{t("subtitle")}</p>
