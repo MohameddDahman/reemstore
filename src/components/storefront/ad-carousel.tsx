@@ -175,20 +175,41 @@ export function AdCarousel({
   const isAr = locale === "ar";
   const campaigns = SETS[set];
 
+  const sectionRef = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
+  // A carousel nobody can see has no reason to animate.
+  const [onScreen, setOnScreen] = useState(false);
   const [active, setActive] = useState(0);
   // Auto-advance yields to the shopper: any touch or hover pauses it,
   // and it only resumes once they have left it alone for a while.
   const [paused, setPaused] = useState(false);
 
-  const scrollToCard = useCallback((index: number) => {
-    const rail = railRef.current;
-    if (!rail) return;
-    const card = rail.children[index] as HTMLElement | undefined;
-    // `block: nearest` keeps this from scrolling the page vertically as
-    // a side effect of moving the rail sideways.
-    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
-  }, []);
+  const scrollToCard = useCallback(
+    (index: number) => {
+      const rail = railRef.current;
+      if (!rail) return;
+      const card = rail.children[index] as HTMLElement | undefined;
+      if (!card) return;
+
+      // Move this rail and nothing else.
+      //
+      // scrollIntoView walks every scrollable ancestor, the document
+      // included, so a carousel below the fold hauled the whole window
+      // down to itself on each tick — two of them 5.5s apart threw the
+      // page from top to bottom while the shopper was reading.
+      // "block: nearest" does not prevent that; it only applies once the
+      // element is already on screen.
+      //
+      // Raising scrollLeft always moves content visually left, in either
+      // writing direction, so the delta is simply how far the card's
+      // inline-start edge sits from the rail's.
+      const railBox = rail.getBoundingClientRect();
+      const cardBox = card.getBoundingClientRect();
+      const delta = isAr ? cardBox.right - railBox.right : cardBox.left - railBox.left;
+      rail.scrollBy({ left: delta, behavior: "smooth" });
+    },
+    [isAr]
+  );
 
   /**
    * Which card is parked at the rail's inline start.
@@ -216,7 +237,18 @@ export function AdCarousel({
   }, [isAr]);
 
   useEffect(() => {
-    if (paused) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (paused || !onScreen) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = setInterval(() => {
       setActive((current) => {
@@ -226,7 +258,7 @@ export function AdCarousel({
       });
     }, 5500);
     return () => clearInterval(timer);
-  }, [paused, campaigns.length, scrollToCard]);
+  }, [paused, onScreen, campaigns.length, scrollToCard]);
 
   const step = (direction: 1 | -1) => {
     const next = (active + direction + campaigns.length) % campaigns.length;
@@ -236,6 +268,7 @@ export function AdCarousel({
 
   return (
     <section
+      ref={sectionRef}
       className={band ? "bg-sand py-10 sm:py-12" : "py-10 sm:py-12"}
       onPointerEnter={() => setPaused(true)}
       onPointerDown={() => setPaused(true)}
