@@ -250,7 +250,17 @@
       "status": "الحالة",
       "category": "الفئة",
       "save": "حفظ المنتج",
-      "delete": "حذف"
+      "delete": "حذف",
+      "searchPlaceholder": "ابحث بالاسم أو رقم المنتج…",
+      "allDepartments": "كل الأقسام",
+      "allStatuses": "كل الحالات",
+      "resultCount": "{count} من {total} منتج",
+      "noResults": "لا توجد منتجات مطابقة للبحث.",
+      "clearFilters": "مسح",
+      "expandAll": "فتح الكل",
+      "collapseAll": "طي الكل",
+      "uncategorised": "بدون قسم",
+      "itemCount": "{count} منتج"
     },
     "orders": {
       "title": "الطلبات",

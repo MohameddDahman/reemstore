@@ -250,7 +250,17 @@
       "status": "Status",
       "category": "Category",
       "save": "Save Product",
-      "delete": "Delete"
+      "delete": "Delete",
+      "searchPlaceholder": "Search by name or SKU…",
+      "allDepartments": "All departments",
+      "allStatuses": "All statuses",
+      "resultCount": "{count} of {total} products",
+      "noResults": "No products match that search.",
+      "clearFilters": "Clear",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse all",
+      "uncategorised": "Uncategorised",
+      "itemCount": "{count} items"
     },
     "orders": {
       "title": "Orders",
