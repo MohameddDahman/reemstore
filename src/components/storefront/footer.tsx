@@ -1,17 +1,16 @@
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+"use client";
 
-const NAV_LINKS = [
-  { key: "skincare", href: "/category/skincare" },
-  { key: "makeup", href: "/category/makeup" },
-  { key: "fragrance", href: "/category/fragrance" },
-  { key: "hairCare", href: "/category/hair-care" },
-] as const;
+import { useLocale, useTranslations } from "next-intl";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { Link } from "@/i18n/navigation";
 
 export function Footer() {
   const t = useTranslations("footer");
-  const nav = useTranslations("nav");
   const brand = useTranslations("brand");
+  const locale = useLocale() as "ar" | "en";
+  const tree = useQuery(api.categories.tree);
+  const departments = (tree ?? []).slice(0, 8);
 
   return (
     <footer className="border-t border-line bg-cream-soft">
@@ -28,10 +27,13 @@ export function Footer() {
         <div>
           <p className="text-sm font-semibold uppercase tracking-widest text-ink">{t("shop")}</p>
           <ul className="mt-4 space-y-3">
-            {NAV_LINKS.map((link) => (
-              <li key={link.key}>
-                <Link href={link.href} className="text-sm text-ink-soft hover:text-ink">
-                  {nav(link.key)}
+            {departments.map((dept) => (
+              <li key={dept._id}>
+                <Link
+                  href={`/category/${dept.slug}`}
+                  className="text-sm text-ink-soft hover:text-ink"
+                >
+                  {dept.name[locale]}
                 </Link>
               </li>
             ))}

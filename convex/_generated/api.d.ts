@@ -11,6 +11,7 @@
 import type * as adminAuth from "../adminAuth.js";
 import type * as auth from "../auth.js";
 import type * as banners from "../banners.js";
+import type * as brands from "../brands.js";
 import type * as categories from "../categories.js";
 import type * as coupons from "../coupons.js";
 import type * as files from "../files.js";
@@ -21,7 +22,6 @@ import type * as lib_stockImages from "../lib/stockImages.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as reviews from "../reviews.js";
-import type * as seed from "../seed.js";
 import type * as seedStore from "../seedStore.js";
 import type * as settings from "../settings.js";
 
@@ -35,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   adminAuth: typeof adminAuth;
   auth: typeof auth;
   banners: typeof banners;
+  brands: typeof brands;
   categories: typeof categories;
   coupons: typeof coupons;
   files: typeof files;
@@ -45,7 +46,6 @@ declare const fullApi: ApiFromModules<{
   orders: typeof orders;
   products: typeof products;
   reviews: typeof reviews;
-  seed: typeof seed;
   seedStore: typeof seedStore;
   settings: typeof settings;
 }>;

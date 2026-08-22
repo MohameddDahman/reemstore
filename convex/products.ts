@@ -37,7 +37,20 @@ export const listActive = query({
         .query("categories")
         .withIndex("by_slug", (q) => q.eq("slug", categorySlug))
         .unique();
-      products = category ? products.filter((p) => p.categoryId === category._id) : [];
+
+      if (!category) {
+        products = [];
+      } else {
+        // Products hang off subcategories, so a department slug has to
+        // match its children too — otherwise every department page would
+        // come back empty.
+        const children = await ctx.db
+          .query("categories")
+          .withIndex("by_parent", (q) => q.eq("parentId", category._id))
+          .collect();
+        const ids = new Set<string>([category._id, ...children.map((c) => c._id)]);
+        products = products.filter((p) => ids.has(p.categoryId));
+      }
     }
 
     if (tag) {

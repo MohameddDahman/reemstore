@@ -70,3 +70,44 @@ export const remove = mutation({
     await ctx.db.delete(id);
   },
 });
+
+/**
+ * The full department -> subcategory tree, ordered. Powers the mega menu,
+ * the department grid and department landing pages. Small enough (a few
+ * dozen rows) to send whole rather than paginate.
+ */
+export const tree = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("categories").collect();
+    const departments = all
+      .filter((c) => c.parentId === undefined)
+      .sort((a, b) => a.order - b.order);
+
+    return departments.map((dept) => ({
+      ...dept,
+      subs: all
+        .filter((c) => c.parentId === dept._id)
+        .sort((a, b) => a.order - b.order),
+    }));
+  },
+});
+
+/** A department plus its subcategories, for the department landing page. */
+export const departmentBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, { slug }) => {
+    const dept = await ctx.db
+      .query("categories")
+      .withIndex("by_slug", (q) => q.eq("slug", slug))
+      .unique();
+    if (!dept) return null;
+
+    const subs = await ctx.db
+      .query("categories")
+      .withIndex("by_parent", (q) => q.eq("parentId", dept._id))
+      .collect();
+
+    return { ...dept, subs: subs.sort((a, b) => a.order - b.order) };
+  },
+});

@@ -19,12 +19,15 @@ export function ProductRail({
   products,
   viewAllHref,
   accent = false,
+  bare = false,
 }: {
-  title: string;
+  title?: string;
   subtitle?: string;
   products: Doc<"products">[] | undefined;
   viewAllHref?: string;
   accent?: boolean;
+  /** Render only the scroller — for callers supplying their own heading. */
+  bare?: boolean;
 }) {
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -40,10 +43,35 @@ export function ProductRail({
     el.scrollBy({ left: sign * Math.min(el.clientWidth * 0.8, 640), behavior: "smooth" });
   };
 
+  const scroller = (
+    <div
+      ref={scrollerRef}
+      className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:gap-4 sm:px-0"
+    >
+      {(products ?? Array.from({ length: 6 })).map((product, i) =>
+        product ? (
+          <div
+            key={(product as Doc<"products">)._id}
+            className="w-[44%] shrink-0 snap-start sm:w-[30%] md:w-[23%] lg:w-[15.6%]"
+          >
+            <ProductCard product={product as Doc<"products">} index={i} />
+          </div>
+        ) : (
+          <div
+            key={i}
+            className="h-64 w-[44%] shrink-0 animate-pulse rounded-lg bg-cream-soft sm:w-[30%] md:w-[23%] lg:w-[15.6%]"
+          />
+        )
+      )}
+    </div>
+  );
+
+  if (bare) return scroller;
+
   return (
-    <section className={accent ? "bg-rose-mist py-14" : "py-14"}>
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="mb-6 flex items-end justify-between gap-4">
+    <section className={accent ? "bg-sand py-12" : "py-12"}>
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
+        <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="font-heading text-xl font-bold tracking-tight text-ink sm:text-2xl">
               {title}
@@ -79,26 +107,7 @@ export function ProductRail({
           </div>
         </div>
 
-        <div
-          ref={scrollerRef}
-          className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {(products ?? Array.from({ length: 5 })).map((product, i) =>
-            product ? (
-              <div
-                key={(product as Doc<"products">)._id}
-                className="w-[46%] shrink-0 snap-start sm:w-[31%] lg:w-[19%]"
-              >
-                <ProductCard product={product as Doc<"products">} index={i} />
-              </div>
-            ) : (
-              <div
-                key={i}
-                className="h-64 w-[46%] shrink-0 animate-pulse rounded-lg bg-cream-soft sm:w-[31%] lg:w-[19%]"
-              />
-            )
-          )}
-        </div>
+        {scroller}
       </div>
     </section>
   );

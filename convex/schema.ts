@@ -24,13 +24,32 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 
+  // Two levels: a department has parentId undefined, a subcategory points
+  // at its department. Kept as one self-referencing table rather than two
+  // so products can hang off either level without a second foreign key.
   categories: defineTable({
     name: localized,
     slug: v.string(),
     description: v.optional(localized),
     image: v.optional(v.string()),
+    // Emoji shown on department tiles and in the mega menu. Emoji rather
+    // than icon files so the admin can pick one by typing.
+    icon: v.optional(v.string()),
+    parentId: v.optional(v.id("categories")),
     order: v.number(),
     featured: v.boolean(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_parent", ["parentId"]),
+
+  // Brands the marketplace resells. Their own table so a brand rail and
+  // brand pages don't have to scrape distinct values out of products.
+  brands: defineTable({
+    name: v.string(),
+    slug: v.string(),
+    logo: v.optional(v.string()),
+    featured: v.boolean(),
+    order: v.number(),
   }).index("by_slug", ["slug"]),
 
   products: defineTable({
@@ -39,6 +58,7 @@ export default defineSchema({
     description: localized,
     shortDescription: v.optional(localized),
     categoryId: v.id("categories"),
+    brandId: v.optional(v.id("brands")),
     images: v.array(v.string()),
     price: v.number(),
     compareAtPrice: v.optional(v.number()),

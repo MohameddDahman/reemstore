@@ -1,7 +1,7 @@
 {
   "brand": {
     "name": "Reem",
-    "tagline": "Beauty, unveiled."
+    "tagline": "Everything but the medicine."
   },
   "nav": {
     "shop": "Shop",
@@ -46,15 +46,15 @@
     },
     "featured": {
       "title": "Bestsellers",
-      "subtitle": "Loved by thousands, restocked weekly"
+      "subtitle": "What Egypt is buying this week"
     },
     "newArrivals": {
       "title": "Just Landed",
       "subtitle": "The newest additions to the edit"
     },
     "testimonials": {
-      "title": "Loved, Reviewed, Reordered",
-      "subtitle": "Real words from real Reem customers"
+      "title": "What shoppers say",
+      "subtitle": "Real reviews from real orders"
     },
     "editorial": {
       "title": "The Ritual of Radiant Skin",
@@ -62,8 +62,8 @@
       "cta": "Our Story"
     },
     "newsletter": {
-      "title": "Join the Inner Circle",
-      "subtitle": "Early access to drops, private sales, and beauty edits.",
+      "title": "Never miss a deal",
+      "subtitle": "Offers, restocks and price drops — straight to your inbox.",
       "placeholder": "Enter your email",
       "cta": "Subscribe"
     }
@@ -152,7 +152,7 @@
     "shopNow": "Shop Now"
   },
   "footer": {
-    "about": "Reem is a modern beauty house crafting clean, high-performance skincare, makeup and fragrance for the region.",
+    "about": "Reem is an online marketplace for everyday health and care — skincare, baby, adult care, vitamins, medical supplies and home essentials. Everything a pharmacy sells, except the medicine.",
     "shop": "Shop",
     "help": "Help",
     "trackOrder": "Track Order",

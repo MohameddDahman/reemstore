@@ -1,16 +1,27 @@
 import { setRequestLocale } from "next-intl/server";
-import { Hero } from "@/components/storefront/hero";
+import { HeroCarousel } from "@/components/storefront/hero-carousel";
 import { UspStrip } from "@/components/storefront/usp-strip";
+import { FlashDeals } from "@/components/storefront/flash-deals";
+import { DepartmentGrid } from "@/components/storefront/department-grid";
 import { PromoTiles } from "@/components/storefront/promo-tiles";
-import { CategoryGrid } from "@/components/storefront/category-grid";
+import { BrandRail } from "@/components/storefront/brand-rail";
 import {
   BestsellersRail,
+  DepartmentRail,
   NewArrivalsRail,
-  OffersRail,
 } from "@/components/storefront/home-rails";
 import { Testimonials } from "@/components/storefront/testimonials";
 import { Newsletter } from "@/components/storefront/newsletter";
 
+/**
+ * Homepage running order.
+ *
+ * The page is built to answer, in this order: what's on offer (hero),
+ * can I trust you (USP strip), what's urgent (flash deals), what do you
+ * actually stock (departments), then depth — rail after rail of real
+ * catalogue, banded light/sand so a long scroll reads as separate
+ * shelves rather than one undifferentiated column.
+ */
 export default async function HomePage({
   params,
 }: {
@@ -21,12 +32,68 @@ export default async function HomePage({
 
   return (
     <>
-      <Hero />
+      <HeroCarousel />
       <UspStrip />
+      <FlashDeals />
+      <DepartmentGrid />
+
+      <DepartmentRail
+        slug="mother-baby"
+        titleEn="Mother & Baby"
+        titleAr="الأم والطفل"
+        subEn="Diapers, wipes, bottles and bath"
+        subAr="حفاضات ومناديل وببرونات واستحمام"
+      />
+
       <PromoTiles />
+
+      <DepartmentRail
+        slug="skin-care"
+        titleEn="Skin Care"
+        titleAr="العناية بالبشرة"
+        subEn="Cleansers, serums, moisturisers and SPF"
+        subAr="غسول وسيرومات ومرطبات وواقي شمس"
+        accent
+      />
+
       <NewArrivalsRail />
-      <OffersRail />
-      <CategoryGrid />
+
+      <DepartmentRail
+        slug="vitamins"
+        titleEn="Vitamins & Supplements"
+        titleAr="الفيتامينات والمكملات"
+        subEn="Daily essentials for the whole family"
+        subAr="أساسيات يومية لكل أفراد العائلة"
+      />
+
+      <DepartmentRail
+        slug="personal-care"
+        titleEn="Daily Personal Care"
+        titleAr="العناية اليومية"
+        subEn="Bath, deodorant, body and hands"
+        subAr="استحمام ومزيلات عرق وعناية بالجسم واليدين"
+        accent
+      />
+
+      <BrandRail />
+
+      <DepartmentRail
+        slug="medical-supplies"
+        titleEn="Medical Supplies"
+        titleAr="المستلزمات الطبية"
+        subEn="First aid, devices and supports"
+        subAr="إسعافات أولية وأجهزة ودعامات"
+      />
+
+      <DepartmentRail
+        slug="adult-care"
+        titleEn="Adult Care"
+        titleAr="عناية الكبار"
+        subEn="Discreet delivery, everyday dignity"
+        subAr="توصيل بخصوصية تامة"
+        accent
+      />
+
       <BestsellersRail />
       <Testimonials />
       <Newsletter />

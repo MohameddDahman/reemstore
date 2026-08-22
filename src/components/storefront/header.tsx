@@ -1,26 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { ChevronDown, Menu, ShoppingBag, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
+import { MegaMenu } from "./mega-menu";
+import { api } from "../../../convex/_generated/api";
+import { useQuery } from "convex/react";
 import { LocaleSwitcher } from "./locale-switcher";
 import { SearchBox } from "./search-box";
 import { useCart, cartTotals } from "@/store/cart";
 import { cn } from "@/lib/utils";
 
-const NAV_LINKS = [
-  { key: "skincare", href: "/category/skincare" },
-  { key: "makeup", href: "/category/makeup" },
-  { key: "fragrance", href: "/category/fragrance" },
-  { key: "hairCare", href: "/category/hair-care" },
-] as const;
-
 export function Header() {
   const t = useTranslations("nav");
   const brand = useTranslations("brand");
+  const locale = useLocale() as "ar" | "en";
   const pathname = usePathname();
+  const tree = useQuery(api.categories.tree);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const items = useCart((s) => s.items);
@@ -91,20 +89,7 @@ export function Header() {
         <SearchBox />
       </div>
 
-      {/* Category nav row */}
-      <nav className="hidden border-t border-line lg:block">
-        <div className="mx-auto flex max-w-7xl items-center gap-8 px-8 py-2.5">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.key}
-              href={link.href}
-              className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink transition-colors hover:text-rose"
-            >
-              {t(link.key)}
-            </Link>
-          ))}
-        </div>
-      </nav>
+      <MegaMenu />
 
       <AnimatePresence>
         {mobileOpen && (
@@ -129,13 +114,36 @@ export function Header() {
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <nav className="flex flex-col gap-5">
-                {NAV_LINKS.map((link) => (
-                  <Link key={link.key} href={link.href} className="text-base text-ink">
-                    {t(link.key)}
-                  </Link>
+              <nav className="flex flex-col gap-1 overflow-y-auto pb-10">
+                {(tree ?? []).map((dept) => (
+                  <details key={dept._id} className="group border-b border-line">
+                    <summary className="flex cursor-pointer list-none items-center justify-between py-3 text-[15px] font-semibold text-ink marker:hidden">
+                      <span className="flex items-center gap-2">
+                        <span aria-hidden>{dept.icon}</span>
+                        {dept.name[locale]}
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-ink-soft transition-transform group-open:rotate-180" />
+                    </summary>
+                    <div className="flex flex-col pb-2">
+                      <Link
+                        href={`/category/${dept.slug}`}
+                        className="py-1.5 ps-7 text-sm font-medium text-rose"
+                      >
+                        {locale === "ar" ? "عرض كل القسم" : "Shop all"}
+                      </Link>
+                      {dept.subs.map((sub) => (
+                        <Link
+                          key={sub._id}
+                          href={`/category/${sub.slug}`}
+                          className="py-1.5 ps-7 text-sm text-ink-soft"
+                        >
+                          {sub.name[locale]}
+                        </Link>
+                      ))}
+                    </div>
+                  </details>
                 ))}
-                <Link href="/track-order" className="text-base text-ink">
+                <Link href="/track-order" className="mt-4 text-base font-semibold text-ink">
                   {t("trackOrder")}
                 </Link>
               </nav>
