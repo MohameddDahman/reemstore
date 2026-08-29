@@ -60,12 +60,6 @@ export function DepartmentGrid() {
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     )}
-                    <span
-                      aria-hidden
-                      className="absolute bottom-1 text-lg drop-shadow-sm ltr:left-1.5 rtl:right-1.5"
-                    >
-                      {dept.icon}
-                    </span>
                   </div>
                   <p className="line-clamp-2 text-[12px] font-semibold leading-tight text-ink">
                     {dept.name[locale]}

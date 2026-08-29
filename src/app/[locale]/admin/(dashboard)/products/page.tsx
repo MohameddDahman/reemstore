@@ -250,7 +250,6 @@ export default function AdminProductsPage() {
                     open ? "rotate-90 rtl:-rotate-90" : ""
                   }`}
                 />
-                {dept.category?.icon && <span aria-hidden>{dept.category.icon}</span>}
                 <span className="min-w-0 flex-1 truncate font-heading text-sm font-bold text-ink">
                   {dept.category?.name[locale] ?? t("uncategorised")}
                 </span>

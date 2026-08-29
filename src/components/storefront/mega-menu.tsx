@@ -65,7 +65,6 @@ export function MegaMenu() {
             <div className="mx-auto max-w-[1400px] px-5 py-6 sm:px-8">
               <div className="mb-4 flex items-center gap-2">
                 <span aria-hidden className="text-xl">
-                  {open.icon}
                 </span>
                 <Link
                   href={`/category/${open.slug}`}

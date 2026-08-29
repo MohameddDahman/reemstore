@@ -7,22 +7,22 @@ import { ProductIllustration, hasIllustration } from "./product-illustration";
  * Department identity used by the placeholder, keyed by the department
  * slug that seeding writes as a product's first tag.
  */
-const DEPARTMENT_LOOK: Record<string, { icon: string; tint: string }> = {
-  "skin-care": { icon: "🧴", tint: "#fdeef0" },
-  "hair-care": { icon: "💇‍♀️", tint: "#f3eefd" },
-  makeup: { icon: "💄", tint: "#fdeef7" },
-  "mother-baby": { icon: "🍼", tint: "#eef6fd" },
-  "adult-care": { icon: "🧑‍🦳", tint: "#eef1f6" },
-  "personal-care": { icon: "🧼", tint: "#eefdf6" },
-  "oral-care": { icon: "🦷", tint: "#eef9fd" },
-  "men-care": { icon: "🧔", tint: "#eff0f2" },
-  "feminine-care": { icon: "🌸", tint: "#fdeef5" },
-  "foot-care": { icon: "🦶", tint: "#fdf4ee" },
-  vitamins: { icon: "💊", tint: "#fdf9ee" },
-  "medical-supplies": { icon: "🩺", tint: "#eef4fd" },
-  fragrance: { icon: "🌹", tint: "#fdeeee" },
-  "home-essentials": { icon: "🏠", tint: "#f0fdf4" },
-  "devices-appliances": { icon: "🔌", tint: "#eef2fd" },
+const DEPARTMENT_TINT: Record<string, string> = {
+  "skin-care": "#fdeef0",
+  "hair-care": "#f3eefd",
+  "makeup": "#fdeef7",
+  "mother-baby": "#eef6fd",
+  "adult-care": "#eef1f6",
+  "personal-care": "#eefdf6",
+  "oral-care": "#eef9fd",
+  "men-care": "#eff0f2",
+  "feminine-care": "#fdeef5",
+  "foot-care": "#fdf4ee",
+  "vitamins": "#fdf9ee",
+  "medical-supplies": "#eef4fd",
+  "fragrance": "#fdeeee",
+  "home-essentials": "#f0fdf4",
+  "devices-appliances": "#eef2fd",
 };
 
 /**
@@ -88,16 +88,30 @@ export function ProductImage({
     return <ProductIllustration aisleSlug={aisleSlug} />;
   }
 
-  const look = DEPARTMENT_LOOK[departmentSlug ?? ""] ?? { icon: "🛍️", tint: "#f6f5f3" };
+  const tint = DEPARTMENT_TINT[departmentSlug ?? ""] ?? "#f6f5f3";
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center gap-1.5 p-3 text-center"
-      style={{ backgroundColor: look.tint }}
+      className="flex h-full w-full flex-col items-center justify-center gap-2 p-3 text-center"
+      style={{ backgroundColor: tint }}
       // Decorative: the product name is already announced next to it.
       aria-hidden
     >
-      <span className="text-3xl leading-none opacity-80 sm:text-4xl">{look.icon}</span>
+      {/* A drawn container rather than an emoji. Emoji render in each
+          platform's own cartoon style, which never matches the rest of
+          the page and reads as filler — the thing the client noticed.
+          A neutral bottle is quiet, sits in the brand's line weight, and
+          looks like photography that has not arrived yet. */}
+      <svg viewBox="0 0 48 64" className="h-1/2 w-auto max-h-16" fill="none">
+        <path
+          d="M18 12h12v6l6 8v30a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4V26l6-8v-6Z"
+          stroke="#9c948c"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <rect x="19" y="5" width="10" height="7" rx="2" stroke="#9c948c" strokeWidth="2" />
+        <path d="M14 38h20" stroke="#9c948c" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+      </svg>
       <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
         Reem
       </span>

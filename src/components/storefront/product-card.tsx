@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Check, Star } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useCart } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import { useCurrencySymbol } from "@/lib/use-currency";
@@ -17,7 +17,7 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
   const locale = useLocale() as "ar" | "en";
   const t = useTranslations("product");
   const add = useCart((s) => s.add);
-  const openCart = useCart((s) => s.open);
+  const router = useRouter();
   const [hover, setHover] = useState(false);
   // Brief confirmation on the button itself. A toast alone makes people
   // wonder whether the tap registered, and they tap again.
@@ -54,7 +54,7 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
     );
     toast.success(t("added"), {
       description: product.name[locale],
-      action: { label: t("viewBag"), onClick: openCart },
+      action: { label: t("viewBag"), onClick: () => router.push("/cart") },
     });
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1400);

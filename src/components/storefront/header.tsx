@@ -24,7 +24,6 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const items = useCart((s) => s.items);
-  const toggleCart = useCart((s) => s.toggle);
   const { count } = cartTotals(items);
   const closeMobile = useCallback(() => setMobileOpen(false), []);
   useScrollLock(mobileOpen);
@@ -78,7 +77,7 @@ export function Header() {
           >
             {t("trackOrder")}
           </Link>
-          <button aria-label={t("cart")} onClick={toggleCart} className="relative">
+          <Link href="/cart" aria-label={t("cart")} className="relative">
             <ShoppingBag className="h-5 w-5 text-ink" strokeWidth={1.5} />
             {count > 0 && (
               <motion.span
@@ -92,7 +91,7 @@ export function Header() {
                 {count}
               </motion.span>
             )}
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -131,7 +130,6 @@ export function Header() {
                   <details key={dept._id} className="group border-b border-line">
                     <summary className="flex cursor-pointer list-none items-center justify-between py-3 text-[15px] font-semibold text-ink marker:hidden">
                       <span className="flex items-center gap-2">
-                        <span aria-hidden>{dept.icon}</span>
                         {dept.name[locale]}
                       </span>
                       <ChevronDown className="h-4 w-4 text-ink-soft transition-transform group-open:rotate-180" />
@@ -160,7 +158,7 @@ export function Header() {
                     href="/deals"
                     className="flex items-center gap-2 rounded-lg bg-rose-mist px-3 py-2.5 text-[15px] font-bold text-rose"
                   >
-                    ⚡ {locale === "ar" ? "عروض اليوم" : "Today's Deals"}
+                    {locale === "ar" ? "عروض اليوم" : "Today's Deals"}
                   </Link>
                   <Link href="/track-order" className="px-3 py-2.5 text-[15px] text-ink">
                     {t("trackOrder")}

@@ -83,7 +83,6 @@ export function BrowseClient({
               }`}
             >
               <span className="me-1.5" aria-hidden>
-                {dept.icon}
               </span>
               {dept.name[locale]}
             </Link>

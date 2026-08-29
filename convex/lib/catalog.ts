@@ -34,7 +34,14 @@ export type SeedSub = {
 export type SeedDept = {
   slug: string;
   name: { en: string; ar: string };
-  icon: string;
+  /**
+   * Optional, and unset for every department today. Emoji were dropped
+   * from the storefront because they render in each platform's own
+   * cartoon style, never match the page, and read as filler. The field
+   * survives for a real icon set — an SVG or an uploaded mark — rather
+   * than being reintroduced as emoji.
+   */
+  icon?: string;
   subs: SeedSub[];
 };
 
@@ -52,7 +59,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "skin-care",
     name: { en: "Skin Care", ar: "العناية بالبشرة" },
-    icon: "🧴",
     subs: [
       {
         slug: "cleansers",
@@ -115,7 +121,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "hair-care",
     name: { en: "Hair Care", ar: "العناية بالشعر" },
-    icon: "💇‍♀️",
     subs: [
       {
         slug: "shampoo",
@@ -167,7 +172,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "makeup",
     name: { en: "Makeup", ar: "المكياج" },
-    icon: "💄",
     subs: [
       {
         slug: "face-makeup",
@@ -220,7 +224,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "mother-baby",
     name: { en: "Mother & Baby", ar: "الأم والطفل" },
-    icon: "🍼",
     subs: [
       {
         slug: "baby-diapers",
@@ -274,7 +277,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "adult-care",
     name: { en: "Adult Care", ar: "عناية الكبار" },
-    icon: "🧑‍🦳",
     subs: [
       {
         slug: "adult-diapers",
@@ -307,7 +309,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "personal-care",
     name: { en: "Daily Personal Care", ar: "العناية اليومية" },
-    icon: "🧼",
     subs: [
       {
         slug: "bath-shower",
@@ -349,7 +350,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "oral-care",
     name: { en: "Oral Care", ar: "العناية بالفم والأسنان" },
-    icon: "🦷",
     subs: [
       {
         slug: "toothpaste",
@@ -383,7 +383,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "men-care",
     name: { en: "Men's Care", ar: "العناية بالرجل" },
-    icon: "🧔",
     subs: [
       {
         slug: "shaving",
@@ -416,7 +415,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "feminine-care",
     name: { en: "Feminine Care", ar: "العناية النسائية" },
-    icon: "🌸",
     subs: [
       {
         slug: "sanitary-pads",
@@ -449,7 +447,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "foot-care",
     name: { en: "Foot Care", ar: "العناية بالقدم" },
-    icon: "🦶",
     subs: [
       {
         slug: "foot-treatments",
@@ -493,7 +490,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "vitamins",
     name: { en: "Vitamins & Supplements", ar: "الفيتامينات والمكملات" },
-    icon: "💊",
     subs: [
       {
         slug: "daily-vitamins",
@@ -535,7 +531,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "medical-supplies",
     name: { en: "Medical Supplies", ar: "المستلزمات الطبية" },
-    icon: "🩺",
     subs: [
       {
         slug: "first-aid",
@@ -579,7 +574,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "fragrance",
     name: { en: "Fragrance", ar: "العطور" },
-    icon: "🌹",
     subs: [
       {
         slug: "women-fragrance",
@@ -610,7 +604,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "home-essentials",
     name: { en: "Home Essentials", ar: "مستلزمات المنزل" },
-    icon: "🏠",
     subs: [
       {
         slug: "tissues-paper",
@@ -643,7 +636,6 @@ export const DEPARTMENTS: SeedDept[] = [
   {
     slug: "devices-appliances",
     name: { en: "Devices & Appliances", ar: "الأجهزة والمستلزمات الكهربائية" },
-    icon: "🔌",
     subs: [
       {
         slug: "mens-shavers",

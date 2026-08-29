@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Minus, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
+import { useRouter } from "@/i18n/navigation";
 import { useCart } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import { DEFAULT_CURRENCY_SYMBOL } from "@/lib/use-currency";
@@ -29,7 +30,7 @@ export function ProductDetail({ slug }: { slug: string }) {
   const [variantIdx, setVariantIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const add = useCart((s) => s.add);
-  const openCart = useCart((s) => s.open);
+  const router = useRouter();
   const symbol = settings?.currencySymbol ?? DEFAULT_CURRENCY_SYMBOL;
 
   const variant = product?.variants[variantIdx];
@@ -69,7 +70,7 @@ export function ProductDetail({ slug }: { slug: string }) {
     );
     toast.success(t("added"), {
       description: product.name[locale],
-      action: { label: t("viewBag"), onClick: openCart },
+      action: { label: t("viewBag"), onClick: () => router.push("/cart") },
     });
   };
 
