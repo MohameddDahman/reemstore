@@ -107,10 +107,14 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
         </div>
 
         <div className="mt-2.5 flex flex-1 flex-col">
-          <p className="line-clamp-2 text-[13px] leading-snug text-ink">{product.name[locale]}</p>
+          {/* Two lines are reserved whether or not the name needs them,
+              so ratings, prices and buttons line up across the shelf. */}
+          <p className="line-clamp-2 min-h-[2.75em] text-[13px] leading-snug text-ink">
+            {product.name[locale]}
+          </p>
 
-          {product.reviewCount > 0 && (
-            <div className="mt-1 flex items-center gap-1">
+          {product.reviewCount > 0 ? (
+            <div className="mt-1 flex h-4 items-center gap-1">
               <div className="flex">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
@@ -123,6 +127,8 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
               </div>
               <span className="text-[11px] text-ink-soft">({product.reviewCount})</span>
             </div>
+          ) : (
+            <div className="mt-1 h-4" aria-hidden />
           )}
 
           {hasVariants && (
@@ -141,14 +147,17 @@ export function ProductCard({ product, index = 0 }: { product: Doc<"products">; 
             </div>
           )}
 
-          <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5">
+          {/* One line, always. Allowed to wrap, the struck-through original
+              price dropped to a second line on some sale cards and pushed
+              that card's button 8px below its neighbours'. */}
+          <div className="mt-auto flex min-h-[1.5rem] flex-nowrap items-baseline gap-x-1.5 pt-1.5">
             <span
-              className={`text-sm font-semibold ${onSale ? "text-rose" : "text-ink"}`}
+              className={`whitespace-nowrap text-sm font-semibold ${onSale ? "text-rose" : "text-ink"}`}
             >
               {formatPrice(product.price, symbol, locale)}
             </span>
             {onSale && (
-              <span className="text-[11px] text-ink-soft line-through">
+              <span className="min-w-0 truncate whitespace-nowrap text-[11px] text-ink-soft line-through">
                 {formatPrice(product.compareAtPrice!, symbol, locale)}
               </span>
             )}
